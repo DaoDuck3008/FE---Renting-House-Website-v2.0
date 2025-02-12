@@ -9,7 +9,7 @@ import PostList from "./redux/components/HousePosts/PostList";
 import "./App.scss";
 
 function App() {
-  const [displayMap, setDisplayMap] = useState(true);
+  const [displayMap, setDisplayMap] = useState(false);
 
   const handleToggleMap = () => {
     if (displayMap) {

@@ -114,8 +114,8 @@ const RegisterModal = (props) => {
       <Modal show={props.show} onHide={props.handleClose} size="xl">
         <Modal.Body>
           <div className="row">
-            <div className="left-container2 col-6"></div>
-            <div className="right-container col-6">
+            <div className="left-container2 md-d-none col-lg-6"></div>
+            <div className="right-container col-md-12 col-lg-6">
               <Stack className="col-md-10 mx-auto">
                 {/* HEADER */}
                 <div className="d-flex flex-row-reverse">
@@ -133,8 +133,8 @@ const RegisterModal = (props) => {
                 <h1 className="mx-auto mb-3">Sign up</h1>
                 {/* Input form */}
                 <Form className="input-form">
-                  <div className="row">
-                    <div className="col-6">
+                  <div className="row my-1">
+                    <div className="col-xs-12 col-sm-6">
                       <FormLabel>Username</FormLabel>
                       <InputGroup size="md">
                         <InputGroup.Text className="white-background no-border">
@@ -155,7 +155,7 @@ const RegisterModal = (props) => {
                       </InputGroup>
                       <hr className="horizontal-line"></hr>
                     </div>
-                    <div className="col-6">
+                    <div className="col-xs-12 col-sm-6 mb-1">
                       <FormLabel>Gender</FormLabel>
                       <Form.Select
                         className={validInput.gender ? "" : "is-invalid"}

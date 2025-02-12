@@ -1,20 +1,21 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faX, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "react-bootstrap";
 
-function Dropzone() {
+const Dropzone = ({ onFilesUploaded }) => {
   const [files, setFiles] = useState([]);
   const [rejected, setRejected] = useState([]);
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [uploadNotice, setUploadNotice] = useState("");
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     // Do something with the files
     if (acceptedFiles?.length) {
       setFiles((previousFiles) => [
         ...previousFiles,
-        acceptedFiles,
         ...acceptedFiles.map((file) =>
           Object.assign(file, { preview: URL.createObjectURL(file) })
         ),
@@ -42,18 +43,58 @@ function Dropzone() {
 
     if (!files?.length) return;
 
-    const formData = new FormData();
-    files.forEach((file) => formData.append("file", file));
-
-    formData.append("upload_preset", "upload-pb7f31j3");
+    setUploadNotice("waiting");
+    setUploadStatus("Waiting...");
 
     const URL = process.env.REACT_APP_CLOUDINARY_URL;
-    const data = await fetch(URL, {
-      method: "POST",
-      body: formData,
-    }).then((res) => res.json());
 
-    console.log(data);
+    try {
+      // Sử dụng Promise.all để tải lên từng file
+      const uploadResults = await Promise.all(
+        files.map(async (file) => {
+          const formData = new FormData();
+          formData.append("file", file); // Truyền file thực tế
+          formData.append(
+            "upload_preset",
+            process.env.REACT_APP_CLOUDINARY_NAME
+          );
+
+          try {
+            const response = await fetch(URL, {
+              method: "POST",
+              body: formData,
+            });
+
+            if (!response.ok) {
+              throw new Error("Upload failed");
+            }
+
+            const data = await response.json();
+            return data; // Lưu thông tin file tải lên thành công
+          } catch (error) {
+            console.error("Error uploading file:", file.name, error);
+            return { error: `Failed to upload ${file.name}` }; // Trả lỗi cho từng file
+          }
+        })
+      );
+
+      // console.log("All upload results:", uploadResults);
+      const cloudImgs = [];
+      uploadResults.map((img) => {
+        cloudImgs.push(img.url);
+      });
+
+      console.log(">>> check cloud imgs: ", cloudImgs);
+
+      onFilesUploaded(cloudImgs);
+
+      setUploadNotice("success");
+      setUploadStatus("success");
+    } catch (e) {
+      setUploadNotice("error");
+      setUploadStatus("Tải ảnh lên thất bại. Vui lòng thử lại"); // Nếu lỗi
+      console.error("Error uploading files:", e);
+    }
   };
 
   return (
@@ -87,12 +128,13 @@ function Dropzone() {
       >
         Danh sách ảnh:{" "}
       </p>
-      <ul className="d-flex flex-wrap" style={{ listStyleType: "none" }}>
+      <ul className="xs-d-flex xs-flex-wrap" style={{ listStyleType: "none" }}>
         {files.map((file, index) =>
           file.preview ? (
             <li
               key={index}
               style={{ position: "relative", display: "inline-block" }}
+              className="my-1"
             >
               <img
                 src={file.preview}
@@ -137,13 +179,37 @@ function Dropzone() {
         <> </>
       )}
 
-      <div className="d-flex flex-row-reverse">
-        <Button variant="outline-dark" onClick={(e) => handleSumbit(e)}>
+      <div className="d-flex xs-flex-row-reverse ">
+        <Button
+          variant="outline-dark"
+          onClick={(e) => handleSumbit(e)}
+          className="mx-2"
+        >
           Lưu hình ảnh
         </Button>
+        <div>
+          {uploadStatus && (
+            <p
+              style={
+                uploadNotice === "success"
+                  ? { color: "green" }
+                  : { color: "rgb(253, 187, 47)" }
+              }
+            >
+              {uploadStatus === "success" ? (
+                <FontAwesomeIcon
+                  icon={faCircleCheck}
+                  size="lg"
+                ></FontAwesomeIcon>
+              ) : (
+                uploadStatus
+              )}
+            </p>
+          )}
+        </div>
       </div>
     </>
   );
-}
+};
 
 export default Dropzone;

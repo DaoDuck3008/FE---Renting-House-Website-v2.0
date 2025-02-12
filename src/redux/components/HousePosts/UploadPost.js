@@ -5,7 +5,6 @@ import {
   Col,
   Row,
   InputGroup,
-  ButtonGroup,
   ToggleButton,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,11 +18,13 @@ import {
   faMotorcycle,
   faFireExtinguisher,
   faVideo,
-  faSquarePlus,
 } from "@fortawesome/free-solid-svg-icons";
 import "./UploadPost.scss";
 import { useState } from "react";
 import Dropzone from "../Dropzone/Dropzone";
+import _ from "lodash";
+import { toast } from "react-toastify";
+import { uploadAPost } from "../../services/PostService";
 
 const UploadPost = (props) => {
   const [numberBathroom, setNumberBathroom] = useState(1);
@@ -35,6 +36,55 @@ const UploadPost = (props) => {
   const [parkingChecked, setParkingChecked] = useState(false);
   const [cameraChecked, setCameraChecked] = useState(false);
 
+  const [filesFromDropzone, setFilesFromDropzone] = useState([]);
+
+  const defaultInput = {
+    // section 1
+    address: "",
+    // section 2
+    kind: "",
+    cost: 0,
+    area: 0,
+    // section 3
+    utilities: {
+      numberBedroom: 0,
+      numberFloor: 0,
+      numberBathroom: 0,
+      security: false,
+      pccc: false,
+      parking: false,
+      camera: false,
+    },
+    // section 4
+    host_name: "",
+    phone: "",
+    email: "",
+    // section 5
+    house_name: "",
+    description: "",
+    // section 6
+    images: [],
+  };
+
+  const defaultValidInput = {
+    address: true,
+    kind: true,
+    cost: true,
+    area: true,
+    host_name: true,
+    phone: true,
+    email: true,
+    house_name: true,
+    description: true,
+    images: true,
+  };
+
+  const [postData, setPostData] = useState(defaultInput);
+  const [checkValidInput, setCheckValidInput] = useState(defaultValidInput);
+
+  const [waiting, setWaiting] = useState(false);
+
+  // Hàm tăng giảm khi bấm nút + - ở section 3
   const increaseNumber = (setter, value) => {
     setter(value + 1);
   };
@@ -42,11 +92,94 @@ const UploadPost = (props) => {
     if (value > 0) setter(value - 1);
   };
 
-  const handleToggleBtn = (setter, checked) => {
+  // Hàm nhận các nút trong section 3
+  const handleToggleBtn = (setter, checked, name) => {
     if (checked) {
       setter(false);
+      postData.utilities[name] = false;
     } else {
       setter(true);
+      postData.utilities[name] = true;
+    }
+  };
+
+  // Hàm lấy các URL ảnh từ Dropzone
+  const handleFilesFromDropzone = (files) => {
+    setFilesFromDropzone(files);
+  };
+
+  // hàm này dùng để thay đổi value của các input nhập vào
+  const handleOnChangeInput = (value, name) => {
+    let _postData = _.cloneDeep(postData);
+    _postData[name] = value;
+    setPostData(_postData);
+  };
+
+  // hàm kiểm tra xem các ô input đã được điền vào trước khi submit chưa.
+  const checkValidation = () => {
+    setCheckValidInput(defaultValidInput);
+
+    let check = true;
+    let arr = [
+      "address",
+      "kind",
+      "cost",
+      "area",
+      "host_name",
+      "phone",
+      "phone",
+      "email",
+      "house_name",
+      "description",
+    ];
+
+    for (let i = 0; i < arr.length; i++) {
+      if (!postData[arr[i]]) {
+        toast.error(`You must fill your ${arr[i]}`);
+        setCheckValidInput((prev) => ({
+          ...prev,
+          [arr[i]]: false,
+        }));
+        check = false;
+        break;
+      }
+    }
+    if (!postData.images.length) {
+      setCheckValidInput((prev) => ({
+        ...prev,
+        ["images"]: false,
+      }));
+      check = false;
+      toast.error(`You must add at least a picture!`);
+    }
+
+    return check;
+  };
+
+  // xem các giá trị trả về sau khi điền form
+  const handleSubmit = async () => {
+    //truyền value từ các input của section 3
+    postData.utilities["numberBathroom"] = numberBathroom;
+    postData.utilities["numberBedroom"] = numberBedroom;
+    postData.utilities["numberFloor"] = numberFloor;
+
+    console.log(">>> file from Dropzone: ", filesFromDropzone);
+
+    if (filesFromDropzone?.length) {
+      postData.images = filesFromDropzone;
+    }
+
+    console.log(">>> check post data: ", postData);
+
+    if (checkValidation()) {
+      console.log(">>> validate!!!");
+      let response = await uploadAPost(postData);
+      console.log(">>> check response: ", response);
+      if (response && response.data && +response.data.EC === 0) {
+        toast.success(`${response.data.EM}`);
+      } else {
+        toast.error(`${response.data.EM}`);
+      }
     }
   };
 
@@ -70,8 +203,8 @@ const UploadPost = (props) => {
         </Modal.Header>
         <Modal.Body className="row">
           {/* Modal content */}
-          <div className="col-3"> </div>
-          <Form className="col-6">
+          <div className="col-sm-1 col-md-3 "> </div>
+          <Form className="col-sm-10 col-md-6">
             {/* Section 1: Basic Information */}
             <section className="modal-section">
               <h5 className="section-title">Thông tin Nhà trọ</h5>
@@ -85,9 +218,17 @@ const UploadPost = (props) => {
                       <FontAwesomeIcon icon={faSearch} />
                     </InputGroup.Text>
                     <Form.Control
+                      value={postData.address}
                       type="text"
                       placeholder="Nhập địa chỉ"
-                      className="no-border"
+                      className={
+                        checkValidInput.address
+                          ? "no-border"
+                          : "no-border is-invalid"
+                      }
+                      onChange={(event) =>
+                        handleOnChangeInput(event.target.value, "address")
+                      }
                     />
                   </InputGroup>
                 </Form.Group>
@@ -100,12 +241,22 @@ const UploadPost = (props) => {
               <Form.Group className="form-control">
                 <Form.Label className="section-label">Loại nhà trọ</Form.Label>
                 <InputGroup className="custom-input">
-                  <Form.Select className="no-border">
+                  <Form.Select
+                    className={
+                      checkValidInput.kind
+                        ? "no-border"
+                        : "no-border is-invalid"
+                    }
+                    value={postData.kind}
+                    onChange={(event) =>
+                      handleOnChangeInput(event.target.value, "kind")
+                    }
+                  >
                     <option value="">Chọn loại nhà trọ của bạn</option>
-                    <option value="">phòng trọ</option>
-                    <option value="">Nhà riêng chung chủ</option>
-                    <option value="">Nhà mặt phố</option>
-                    <option value="">Căn hộ chung cư</option>
+                    <option value="rentHouse">phòng trọ</option>
+                    <option value="ownHouse">Nhà riêng chung chủ</option>
+                    <option value="streetHouse">Nhà mặt phố</option>
+                    <option value="apartment">Căn hộ chung cư</option>
                   </Form.Select>
                 </InputGroup>
                 <Row className="g-3 mt-2 mb-2">
@@ -120,8 +271,16 @@ const UploadPost = (props) => {
                         </InputGroup.Text>
                         <Form.Control
                           type="number"
+                          value={postData.cost}
                           placeholder="Nhập giá"
-                          className="no-border"
+                          className={
+                            checkValidInput.cost
+                              ? "no-border"
+                              : "no-border is-invalid"
+                          }
+                          onChange={(event) =>
+                            handleOnChangeInput(event.target.value, "cost")
+                          }
                         />
                         <InputGroup.Text className="no-border">
                           VND
@@ -137,9 +296,20 @@ const UploadPost = (props) => {
                       <InputGroup className="custom-input">
                         <Form.Control
                           type="number"
+                          value={postData.area}
                           placeholder="Nhập diện tích"
-                          className="no-border"
+                          className={
+                            checkValidInput.area
+                              ? "no-border"
+                              : "no-border is-invalid"
+                          }
+                          onChange={(event) =>
+                            handleOnChangeInput(event.target.value, "area")
+                          }
                         />
+                        <InputGroup.Text className="no-border">
+                          m²
+                        </InputGroup.Text>
                       </InputGroup>
                     </Form.Group>
                   </Col>
@@ -240,11 +410,15 @@ const UploadPost = (props) => {
                       <ToggleButton
                         type="checkbox"
                         variant="outline-dark mx-1"
-                        className="custom-button"
+                        className="custom-button my-1"
                         checked={securityChecked}
                         value={1}
                         onClick={() =>
-                          handleToggleBtn(setSecurityChecked, securityChecked)
+                          handleToggleBtn(
+                            setSecurityChecked,
+                            securityChecked,
+                            "security"
+                          )
                         }
                       >
                         <FontAwesomeIcon icon={faUser} /> Bảo vệ
@@ -252,11 +426,11 @@ const UploadPost = (props) => {
                       <ToggleButton
                         type="checkbox"
                         variant="outline-dark mx-1"
-                        className="custom-button"
+                        className="custom-button my-1"
                         checked={PcccChecked}
                         value={1}
                         onClick={() =>
-                          handleToggleBtn(setPcccChecked, PcccChecked)
+                          handleToggleBtn(setPcccChecked, PcccChecked, "pccc")
                         }
                       >
                         <FontAwesomeIcon icon={faFireExtinguisher} /> PCCC
@@ -264,11 +438,15 @@ const UploadPost = (props) => {
                       <ToggleButton
                         type="checkbox"
                         variant="outline-dark mx-1"
-                        className="custom-button"
+                        className="custom-button my-1"
                         checked={parkingChecked}
                         value={1}
                         onClick={() =>
-                          handleToggleBtn(setParkingChecked, parkingChecked)
+                          handleToggleBtn(
+                            setParkingChecked,
+                            parkingChecked,
+                            "parking"
+                          )
                         }
                       >
                         <FontAwesomeIcon icon={faMotorcycle} /> Chỗ để xe
@@ -276,7 +454,7 @@ const UploadPost = (props) => {
                       <ToggleButton
                         type="checkbox"
                         variant="outline-dark mx-1"
-                        className="custom-button"
+                        className="custom-button my-1"
                         checked={cameraChecked}
                         value={1}
                         onClick={() =>
@@ -301,21 +479,46 @@ const UploadPost = (props) => {
                   </Form.Label>
                   <Form.Control
                     placeholder="Điền tên của bạn"
-                    className="custom-button mb-2"
+                    className={
+                      checkValidInput.host_name
+                        ? "custom-button mb-2"
+                        : "custom-button mb-2 is-invalid"
+                    }
+                    value={postData.host_name}
+                    onChange={(event) =>
+                      handleOnChangeInput(event.target.value, "host_name")
+                    }
                   />
                   <Form.Label className="section-label mt-2">
                     Số điện thoại
                   </Form.Label>
                   <Form.Control
                     placeholder="Điền số điện thoại của bạn"
-                    className="custom-button mb-2"
+                    className={
+                      checkValidInput.phone
+                        ? "custom-button mb-2"
+                        : "custom-button mb-2 is-invalid"
+                    }
+                    value={postData.phone}
+                    onChange={(event) =>
+                      handleOnChangeInput(event.target.value, "phone")
+                    }
                   />
                   <Form.Label className="section-label mt-2">
                     Địa chỉ email
                   </Form.Label>
                   <Form.Control
                     placeholder="Điền email của bạn"
-                    className="custom-button mb-2 "
+                    className={
+                      checkValidInput.email
+                        ? "custom-button mb-2"
+                        : "custom-button mb-2 is-invalid"
+                    }
+                    value={postData.email}
+                    type="email"
+                    onChange={(event) =>
+                      handleOnChangeInput(event.target.value, "email")
+                    }
                   />
                 </Form.Group>
               </Row>
@@ -328,18 +531,29 @@ const UploadPost = (props) => {
                 <Form.Label className="section-label">Tiêu đề</Form.Label>
                 <Form.Control
                   type="text"
-                  className="mb-2"
+                  value={postData.house_name}
+                  className={
+                    checkValidInput.house_name ? "mb-2" : "mb-2 is-invalid"
+                  }
                   placeholder="VD: Cho thuê nhà ở sinh viên 30m2 gần Đại học Ngoại Ngữ, Cầu Giấy."
                   style={{ maxWidth: "800px", margin: "0 auto" }}
+                  onChange={(event) =>
+                    handleOnChangeInput(event.target.value, "house_name")
+                  }
                 />
                 <Form.Text muted>Tối thiểu 30 ký tự, tối đa 99 ký tự</Form.Text>
                 <div className="mb-2"></div>
                 <Form.Label className="section-label">Mô tả</Form.Label>
                 <Form.Control
                   as="textarea"
+                  value={postData.description}
                   rows={5}
+                  className={checkValidInput.description ? "" : "is-invalid"}
                   placeholder="Mô tả chi tiết về: tiện ích, nội thất, vị trí, ... (VD: gần trường đại học nào?)"
                   style={{ maxWidth: "800px", margin: "0 auto" }}
+                  onChange={(event) =>
+                    handleOnChangeInput(event.target.value, "description")
+                  }
                 />
                 <Form.Text muted>
                   Tối thiểu 30 ký tự, tối đa 3000 ký tự
@@ -350,20 +564,28 @@ const UploadPost = (props) => {
             {/* Section 6: import images */}
             <section className="modal-section">
               <h5 className="section-title">Thêm ảnh lên</h5>
-              <Form.Group className="form-control  p-3">
+              <Form.Group
+                className={
+                  checkValidInput.images
+                    ? "form-control p-3"
+                    : "form-control p-3 is-invalid"
+                }
+              >
                 <div>
-                  <Dropzone />
+                  <Dropzone onFilesUploaded={handleFilesFromDropzone} />
                 </div>
               </Form.Group>
             </section>
           </Form>
-          <div className="col-3"> </div>
+          <div className="col-sm-1 col-md-3"> </div>
         </Modal.Body>
 
         <Modal.Footer className="modal-footer">
           <div className="d-flex justify-content-end gap-2">
-            <Button variant="dark">Xem trước</Button>
-            <Button variant="outline-dark">Đăng bài</Button>
+            <Button variant="outline-dark">Xem trước</Button>
+            <Button variant="dark" onClick={() => handleSubmit()}>
+              Đăng bài
+            </Button>
           </div>
         </Modal.Footer>
       </Modal>

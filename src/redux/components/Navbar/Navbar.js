@@ -71,12 +71,18 @@ const Navbar = () => {
           {/* Navbar Items */}
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav mx-auto">
-              <button
-                className="btn btn-danger me-2"
-                onClick={() => setIsShowUploadModal(true)}
-              >
-                Đăng bài
-              </button>
+              {isLogin ? (
+                <div className="mb-2">
+                  <button
+                    className="btn btn-danger me-2 mx-auto"
+                    onClick={() => setIsShowUploadModal(true)}
+                  >
+                    Đăng bài
+                  </button>
+                </div>
+              ) : (
+                <></>
+              )}
             </ul>
             {/* Login and Register Buttons */}
             <div className="d-flex">

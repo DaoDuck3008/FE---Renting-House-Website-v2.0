@@ -10,34 +10,38 @@ const SearchBar = () => {
     <>
       <div className="container my-2">
         <Stack direction="horizontal" gap={3}>
-          <Form.Control
-            className="me-auto"
-            placeholder="Tìm kiếm theo từ khóa..."
-          />
-          <Button variant="danger" className="d-flex align-items-center">
-            <FontAwesomeIcon icon={faSearch} className="me-2" /> Search
-          </Button>
-          <div className="vr" />
-          <Dropdown>
-            <Dropdown.Toggle
-              variant="btn btn-outline-danger"
-              id="dropdown-basic"
-            >
-              Hà Nội
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Tp Hồ Chí Minh</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Đà Nẵng</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Cần Thơ</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <div className="d-flex pr-1 px-0 py-2 border rounded btn btn-light col-12">
+            <Form.Control
+              style={{
+                border: "none",
+              }}
+              className="me-auto mx-2"
+              placeholder="Tìm kiếm theo từ khóa..."
+            />
+            <Button variant="danger" className="d-flex align-items-center mx-2">
+              <FontAwesomeIcon icon={faSearch} className="me-2" /> Search
+            </Button>
+          </div>
         </Stack>
 
         {/* Filter Options */}
         <div className="d-flex flex-nowarp align-items-stretch mt-2  filter-options">
-          {/* Quận/ huyện */}
+          {/* Thành phố */}
           <div className="me-1">
+            <Dropdown>
+              <Dropdown.Toggle variant="btn btn-light" id="dropdown-basic">
+                Hà Nội
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item href="#/action-1">Tp Hồ Chí Minh</Dropdown.Item>
+                <Dropdown.Item href="#/action-2">Đà Nẵng</Dropdown.Item>
+                <Dropdown.Item href="#/action-3">Cần Thơ</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          {/* Quận/ huyện */}
+          <div className="mx-1">
             <Dropdown>
               <Dropdown.Toggle variant="btn btn-light" id="dropdown-basic">
                 Quận / Huyện
@@ -82,6 +86,31 @@ const SearchBar = () => {
                 <Dropdown.Item href="#/action-3">50 - 80m2</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">80 - 100m2</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Trên 100 m2</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          {/* Sắp xếp */}
+          <div className="mx-1">
+            <Dropdown>
+              <Dropdown.Toggle variant="btn btn-light" id="dropdown-basic">
+                Thời gian
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="#/action-1">Mới nhất</Dropdown.Item>
+                <Dropdown.Item href="#/action-2">Cũ nhất</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+
+          {/* Đánh giá */}
+          <div className="mx-1">
+            <Dropdown>
+              <Dropdown.Toggle variant="btn btn-light" id="dropdown-basic">
+                Đánh giá
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="#/action-1">Từ cao đến thấp</Dropdown.Item>
+                <Dropdown.Item href="#/action-2">Từ thấp đến cao</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

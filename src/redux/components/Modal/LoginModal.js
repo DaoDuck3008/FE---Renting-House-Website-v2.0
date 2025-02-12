@@ -42,16 +42,18 @@ const LoginModal = (props) => {
     setValidInput(validInputDefault);
 
     let check = true;
-    ["emailPhone", "password"].map((input) => {
-      if (!userData[input]) {
-        toast.error(`You must fill your ${input}`);
+    let arr = ["emailPhone", "password"];
+
+    for (let i = 0; i < arr.length; i++) {
+      if (!userData[arr[i]]) {
+        toast.error(`You must fill your ${arr[i]}`);
         let _validInput = _.cloneDeep(validInputDefault);
-        _validInput[input] = false;
+        _validInput[arr[i]] = false;
         setValidInput(_validInput);
         check = false;
-        return;
+        break;
       }
-    });
+    }
 
     return check;
   };
@@ -80,8 +82,8 @@ const LoginModal = (props) => {
       <Modal show={props.show} onHide={props.handleClose} size="lg">
         <Modal.Body>
           <div className="row">
-            <div className="left-container col-5"></div>
-            <div className="right-container col-7">
+            <div className="left-container md-d-none col-lg-5"></div>
+            <div className="right-container col-md-12 col-lg-7">
               <Stack className="col-md-10 mx-auto">
                 {/* HEADER */}
                 <div className="d-flex flex-row-reverse">
