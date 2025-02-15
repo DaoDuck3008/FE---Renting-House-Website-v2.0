@@ -7,18 +7,12 @@ body {
   padding: 0;
   overflow-x: hidden; /* Ẩn thanh trượt ngang */
   .home-container {
-    height: 100%;
     color: white;
-    background-color: rgba(0, 0, 0, 0.7);
     .row {
       .left-side {
-        height: 100vh;
         hr {
           border-width: 2px;
         }
-      }
-      .right-side {
-        height: 100vh;
       }
     }
   }

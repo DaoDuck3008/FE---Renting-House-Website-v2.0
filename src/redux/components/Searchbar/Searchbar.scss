@@ -1,4 +1,27 @@
 .container {
+  .search-input-container {
+    .no-focus {
+      background-color: white;
+    }
+
+    .no-focus {
+      background-color: white;
+    }
+
+    .no-focus:hover {
+      background-color: white;
+    }
+
+    .no-focus:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .search-input-container:hover {
+    background-color: white;
+  }
+
   .search-bar {
     white-space: nowarp;
     max-height: 50px;
@@ -13,5 +36,23 @@
     .btn {
       white-space: nowarp;
     }
+  }
+
+  .filter-options::-webkit-scrollbar {
+    height: 5px; /* Độ cao thanh trượt */
+  }
+
+  .filter-options::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Màu nền track */
+    border-radius: 10px; /* Bo góc */
+  }
+
+  .filter-options::-webkit-scrollbar-thumb {
+    background: #888; /* Màu thanh cuộn */
+    border-radius: 10px; /* Bo góc */
+  }
+
+  .filter-options::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Màu khi hover */
   }
 }

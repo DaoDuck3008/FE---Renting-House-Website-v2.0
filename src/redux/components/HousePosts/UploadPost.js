@@ -82,8 +82,6 @@ const UploadPost = (props) => {
   const [postData, setPostData] = useState(defaultInput);
   const [checkValidInput, setCheckValidInput] = useState(defaultValidInput);
 
-  const [waiting, setWaiting] = useState(false);
-
   // Hàm tăng giảm khi bấm nút + - ở section 3
   const increaseNumber = (setter, value) => {
     setter(value + 1);

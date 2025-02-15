@@ -1,6 +1,6 @@
 .medium-card {
-  max-width: 700px;
-  max-height: 220px;
+  max-width: 850px;
+  max-height: 250px;
 
   .right-side2 {
     .title-font {
@@ -24,7 +24,7 @@
     .text-Truncate {
       display: -webkit-box;
       text-overflow: ellipsis;
-      line-clamp: 2; /* Số dòng hiển thị tối đa */
+      line-clamp: 4; /* Số dòng hiển thị tối đa */
       -webkit-box-orient: vertical;
     }
   }

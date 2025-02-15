@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { fetchAllPosts } from "../../services/PostService";
 import _ from "lodash";
-import { Card, Row, Col } from "react-bootstrap";
+import { Card, Row, Col, Button, ToggleButton } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import {
+  faLocationDot,
+  faDollarSign,
+  faStar,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import "./PostList.scss";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const PostList = (props) => {
   const [posts, setPosts] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     callFetchAllPosts();
-  }, []);
+  }, [location.search]);
 
   const callFetchAllPosts = async () => {
-    let response = await fetchAllPosts();
+    const searchParams = new URLSearchParams(location.search).toString(); // Lấy query từ URL
+    console.log(">>> check searchParams", searchParams);
+    let response = await fetchAllPosts(searchParams);
     if (response && response.data && +response.data.EC === 0) {
       const _posts = _.cloneDeep(response.data.DT);
       setPosts(_posts);
@@ -31,7 +40,9 @@ const PostList = (props) => {
       {posts.map((post) => {
         return (
           <Card
-            className={props.isOpenMap ? "small-card mb-2" : "medium-card mb-2"}
+            className={
+              props.isOpenMap ? "small-card mb-2 " : "medium-card mb-2 "
+            }
             onClick={() => handleClickOnPost()}
             style={{ cursor: "pointer" }}
           >
@@ -44,7 +55,7 @@ const PostList = (props) => {
                   style={{
                     objectFit: "cover",
                     width: "100%",
-                    height: "170px",
+                    height: "210px",
                   }}
                 />
               </Col>
@@ -61,6 +72,49 @@ const PostList = (props) => {
                   <p className="smaller-font lighter-font text-truncate">
                     {post.description}
                   </p>
+                  <div className="d-flex">
+                    <div className="">
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        size="sm"
+                        color="rgb(255, 212, 59)"
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        size="sm"
+                        color="rgb(255, 212, 59)"
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        size="sm"
+                        color="rgb(255, 212, 59)"
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        size="sm"
+                        color="rgb(255, 212, 59)"
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        size="sm"
+                        color="rgb(255, 212, 59)"
+                      />
+                    </div>
+                    <div className="mx-auto"></div>
+                    <div>
+                      <ToggleButton
+                        checked="true"
+                        variant="light"
+                        style={{ border: "1px solid gray", cursor: "pointer" }}
+                      >
+                        <FontAwesomeIcon
+                          color="gray"
+                          icon={faHeart}
+                          size="sm"
+                        />
+                      </ToggleButton>
+                    </div>
+                  </div>
                 </Card.Body>
               </Col>
             </Row>
