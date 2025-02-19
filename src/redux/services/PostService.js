@@ -2,7 +2,10 @@ import axios from "axios";
 
 const fetchAllPosts = async (queryParams) => {
   return await axios.get(
-    `http://localhost:2000/api/v1/posts/read?${queryParams}`
+    `http://localhost:2000/api/v1/posts/read?${queryParams}`,
+    {
+      withCredentials: true,
+    }
   );
 };
 

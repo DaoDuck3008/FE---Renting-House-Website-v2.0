@@ -168,8 +168,8 @@ const RegisterModal = (props) => {
                         } // Hàm cập nhật state
                       >
                         <option value="">Choose your gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
                       </Form.Select>
                     </div>
                   </div>

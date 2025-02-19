@@ -1,0 +1,47 @@
+.fullscreen-page {
+  width: 100vw;
+
+  background-color: white; /* Nền trắng giống Modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .page-content {
+    .modal-container {
+      margin-bottom: 1.5rem;
+      .modal-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      .smaller-title {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .custom-input {
+        font-size: 1.2rem;
+
+        .no-border {
+          border: none;
+          background-color: initial;
+        }
+        .no-border:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+      .no-border {
+        border: none;
+        background-color: initial;
+      }
+
+      .horizontal-line {
+        color: rgb(112, 114, 117);
+        border-width: 3px;
+      }
+    }
+  }
+}

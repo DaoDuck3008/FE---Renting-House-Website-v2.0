@@ -5,6 +5,9 @@ import LoginModal from "../Modal/LoginModal";
 import RegisterModal from "../Modal/RegisterModal";
 import UploadPost from "../HousePosts/UploadPost";
 import { useEffect } from "react";
+import { deleteUserInfo, fetchUserInfo } from "../../services/UserService";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const Navbar = () => {
   const [isShowLoginModal, setIsShowLoginModal] = useState(false);
@@ -12,13 +15,24 @@ const Navbar = () => {
   const [isLogin, setLogin] = useState(false);
   const [isShowUploadModal, setIsShowUploadModal] = useState(false);
 
+  const history = useHistory();
+
   useEffect(() => {
-    let local = localStorage.getItem("account");
-    console.log(">>> check account: ", local);
-    if (local) {
-      setLogin(true);
-    }
+    checkUserInfo();
   }, []);
+
+  const handleLogin = (booleen) => {
+    setLogin(booleen);
+  };
+
+  const checkUserInfo = async () => {
+    const response = await fetchUserInfo();
+    console.log(">>> response: ", response);
+    if (response && response.data && +response.data.EC === 0) {
+      setLogin(true);
+    } else {
+    }
+  };
 
   const handleCloseLoginModal = () => {
     setIsShowLoginModal(false);
@@ -42,10 +56,19 @@ const Navbar = () => {
     setIsShowUploadModal(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("account");
-    setLogin(false);
-    setIsShowLoginModal(true);
+  const handleOpenUserInfo = () => {
+    history.push("/user-info");
+  };
+
+  const handleLogout = async () => {
+    let response = await deleteUserInfo();
+
+    if (response && response.data && +response.data.EC === 0) {
+      setLogin(false);
+      setIsShowLoginModal(true);
+    } else {
+      toast.error(`${response.data.EM}`);
+    }
   };
 
   return (
@@ -90,6 +113,12 @@ const Navbar = () => {
                 <div>
                   <button
                     className="btn btn-outline-light me-2"
+                    onClick={() => handleOpenUserInfo()}
+                  >
+                    Profile
+                  </button>
+                  <button
+                    className="btn btn-light me-2"
                     onClick={() => handleLogout()}
                   >
                     Logout
@@ -121,6 +150,7 @@ const Navbar = () => {
         show={isShowLoginModal}
         handleClose={handleCloseLoginModal}
         handleOpenRegister={handleOpenRegisterModal}
+        checkLogin={handleLogin}
       />
       <RegisterModal
         title="Register"

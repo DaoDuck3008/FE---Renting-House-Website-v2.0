@@ -18,7 +18,7 @@ const HomePage = (props) => {
 
   return (
     <>
-      <div className="home-container">
+      <span className="home-container">
         <div className="row">
           <div
             className={
@@ -55,7 +55,7 @@ const HomePage = (props) => {
             right Side
           </div>
         </div>
-      </div>
+      </span>
     </>
   );
 };

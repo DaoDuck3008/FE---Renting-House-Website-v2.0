@@ -24,8 +24,6 @@ const SearchBar = () => {
   const location = useHistory();
 
   useEffect(() => {
-    console.log(">>> city changed!!!");
-
     const fetchData = async () => {
       try {
         let response = await fetchDistricts(city); // Chờ dữ liệu trả về
@@ -40,7 +38,7 @@ const SearchBar = () => {
     fetchData();
   }, [city]);
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     const query = { searchText, city, district, price, area, time, rating };
     console.log(">>> check query: ", query);
     const queryParams = new URLSearchParams(query).toString();
@@ -57,7 +55,7 @@ const SearchBar = () => {
     setTime("");
     setRating("");
 
-    await handleSearch();
+    handleSearch();
     location.push("");
   };
 
@@ -87,8 +85,8 @@ const SearchBar = () => {
 
         {/* Filter Options */}
         <div
+          style={{ overflowY: "visible" }}
           className="d-flex flex-nowarp align-items-stretch mt-2 pb-2  filter-options"
-          style={{ overflowX: "auto" }}
         >
           {/* Thành phố */}
           <div className="mx-1">
@@ -102,7 +100,7 @@ const SearchBar = () => {
                 {city ? `${city}` : "thành phố"}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu>
+              <Dropdown.Menu className="dropdown-menu">
                 <Dropdown.Item onClick={() => setCity("Hà Nội")}>
                   Hà Nội
                 </Dropdown.Item>
@@ -119,6 +117,7 @@ const SearchBar = () => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
+
           {/* Quận/ huyện */}
           <div className="mx-1">
             <Dropdown disabled>
@@ -204,6 +203,7 @@ const SearchBar = () => {
               </Dropdown.Menu>
             </Dropdown>
           </div>
+
           {/* Sắp xếp */}
           <div className="mx-1">
             <Dropdown>

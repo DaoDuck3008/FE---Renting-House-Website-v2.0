@@ -1,22 +1,11 @@
 import "./App.scss";
-
 import Navbar from "./redux/components/Navbar/Navbar";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
-import HomePage from "./redux/components/HomePage/HomePage";
+import AppRoutes from "./redux/routes/AppRoutes";
 
 function App() {
-  const [displayMap, setDisplayMap] = useState(false);
-
-  const handleToggleMap = () => {
-    if (displayMap) {
-      setDisplayMap(false);
-    } else {
-      setDisplayMap(true);
-    }
-  };
   return (
     <Router>
       <div className="app-container">
@@ -24,7 +13,7 @@ function App() {
           <Navbar />
         </div>
         <div className="app-body">
-          <HomePage />
+          <AppRoutes />
         </div>
       </div>
 

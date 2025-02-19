@@ -63,14 +63,9 @@ const LoginModal = (props) => {
       // console.log(">>> userData: ", userData);
       let response = await loginUser(userData.emailPhone, userData.password);
       if (response && response.data && +response.data.EC === 0) {
-        let data = {
-          isAuthenticated: true,
-          token: true,
-        };
-        toast.success("Login success!!!");
-        localStorage.setItem("account", JSON.stringify(data));
+        props.checkLogin(true);
+
         props.handleClose();
-        window.location.reload();
       } else {
         toast.error(`${response.data.EM}`);
       }
