@@ -84,7 +84,18 @@ const UserInfoModal = (props) => {
   const handleSubmitChangeUserInfo = async () => {
     if (checkValidInput()) {
       setEditing(false);
-      await updateUserInfo(userInfo.id, inputData);
+      try {
+        let res = await updateUserInfo(userInfo.id, inputData);
+        console.log("Response from updateUserInfo:", res.data);
+        if (res && res.data && res.data.success) {
+          toast.success("Lưu thông tin thành công!");
+        } else {
+          toast.error("Cập nhật thất bại!");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Có lỗi xảy ra khi cập nhật!");
+      }
     }
   };
 
