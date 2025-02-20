@@ -27,4 +27,19 @@ const fetchPostWithUserId = async (userId) => {
   );
 };
 
-export { fetchUserInfo, deleteUserInfo, updateUserInfo, fetchPostWithUserId };
+const updateHouseAPI = async (houseId, dataUpdate) => {
+  return await axios.patch(
+    `http://localhost:2000/api/v1/house/${houseId}`,
+    dataUpdate,
+    { withCredentials: true }
+  );
+};
+
+const deleteHouseAPI = async (houseId) => {
+  return await axios.delete(
+    `http://localhost:2000/api/v1/house/${houseId}`,
+    { withCredentials: true }
+  );
+};
+
+export { fetchUserInfo, deleteUserInfo, updateUserInfo, fetchPostWithUserId,updateHouseAPI,deleteHouseAPI};

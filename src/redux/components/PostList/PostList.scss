@@ -1,62 +1,62 @@
 .medium-card {
   max-width: 850px;
-  max-height: 250px;
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 600px;
+  overflow: auto;
 
-  .right-side2 {
-    .title-font {
-      font-size: 13px;
-    }
+  .row {
+    margin: 0 !important;
+    align-items: flex-start !important; 
+  }
 
-    .highlight-font {
-      color: rgb(226, 71, 61);
-      font-weight: 500;
-      font-size: 13px;
-    }
-
-    .smaller-font {
-      font-size: 13px;
-    }
-
-    .lighter-font {
-      color: rgb(121, 121, 121);
-    }
-
-    .text-Truncate {
-      display: -webkit-box;
-      text-overflow: ellipsis;
-      line-clamp: 4; /* Số dòng hiển thị tối đa */
-      -webkit-box-orient: vertical;
+  .left-side2 {
+    padding: 0;
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      display: block;
     }
   }
-}
-.small-card {
-  max-width: 640px;
-  max-height: 190px;
 
   .right-side2 {
+    padding: 1rem;
+
+    /* FORM cuộn trong edit-form */
+    .edit-form {
+      max-height: 150px;   
+      overflow-y: auto;    
+      border: 1px solid #ddd;
+      padding: 0.5rem;       
+    }
+
     .title-font {
-      font-size: 13px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
     }
 
     .highlight-font {
-      color: rgb(226, 71, 61);
+      color: #E2473D;
       font-weight: 500;
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .smaller-font {
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .lighter-font {
-      color: rgb(121, 121, 121);
+      color: #797979;
     }
 
-    .text-Truncate {
-      display: -webkit-box;
-      text-overflow: ellipsis;
-      line-clamp: 2; /* Số dòng hiển thị tối đa */
-      -webkit-box-orient: vertical;
+    .text-truncate {
+      display: block;
+      overflow: visible;
+      text-overflow: unset;
     }
   }
 }
