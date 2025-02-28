@@ -1,6 +1,5 @@
 import {
   Button,
-  Modal,
   Form,
   Col,
   Row,
@@ -20,11 +19,14 @@ import {
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import "./UploadPost.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dropzone from "../Dropzone/Dropzone";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import { uploadAPost } from "../../services/PostService";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { fetchUserInfo } from "../../services/UserService";
+import PostPreview from "./PostPreview";
 
 const UploadPost = (props) => {
   const [numberBathroom, setNumberBathroom] = useState(1);
@@ -37,6 +39,8 @@ const UploadPost = (props) => {
   const [cameraChecked, setCameraChecked] = useState(false);
 
   const [filesFromDropzone, setFilesFromDropzone] = useState([]);
+
+  const history = useHistory();
 
   const defaultInput = {
     // section 1
@@ -81,6 +85,25 @@ const UploadPost = (props) => {
 
   const [postData, setPostData] = useState(defaultInput);
   const [checkValidInput, setCheckValidInput] = useState(defaultValidInput);
+
+  const [showPreview, setShowPreview] = useState(false);
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const getUserInfo = async () => {
+    let response = await fetchUserInfo();
+    if (response && response.data && +response.data.EC === 0) {
+      const userInfo = response.data.DT.payload;
+      //cập nhật host_name, email và phone luôn
+      let _postData = _.cloneDeep(postData);
+      _postData["host_name"] = userInfo.username;
+      _postData["email"] = userInfo.email;
+      _postData["phone"] = userInfo.phone;
+      setPostData(_postData);
+    }
+  };
 
   // Hàm tăng giảm khi bấm nút + - ở section 3
   const increaseNumber = (setter, value) => {
@@ -161,45 +184,55 @@ const UploadPost = (props) => {
     postData.utilities["numberBedroom"] = numberBedroom;
     postData.utilities["numberFloor"] = numberFloor;
 
-    console.log(">>> file from Dropzone: ", filesFromDropzone);
+    // console.log(">>> file from Dropzone: ", filesFromDropzone);
 
     if (filesFromDropzone?.length) {
       postData.images = filesFromDropzone;
     }
 
-    console.log(">>> check post data: ", postData);
+    // console.log(">>> check post data: ", postData);
 
     if (checkValidation()) {
-      console.log(">>> validate!!!");
+      // console.log(">>> validate!!!");
       let response = await uploadAPost(postData);
-      console.log(">>> check response: ", response);
+      // console.log(">>> check response: ", response);
       if (response && response.data && +response.data.EC === 0) {
         toast.success(`${response.data.EM}`);
+        history.push("/search");
       } else {
         toast.error(`${response.data.EM}`);
       }
     }
   };
 
+  const handlePreview = () => {
+    postData.utilities["numberBathroom"] = numberBathroom;
+    postData.utilities["numberBedroom"] = numberBedroom;
+    postData.utilities["numberFloor"] = numberFloor;
+
+    // console.log(">>> file from Dropzone: ", filesFromDropzone);
+
+    if (filesFromDropzone?.length) {
+      postData.images = filesFromDropzone;
+    }
+    console.log(">>> check postData: ", postData);
+    setShowPreview(true);
+  };
+
   return (
     <>
-      <Modal
-        show={props.show}
-        onHide={props.handleClose}
-        fullscreen
-        className="custom-modal"
-      >
-        <Modal.Header className="modal-header">
-          <Modal.Title className="modal-title">Tạo tin đăng</Modal.Title>
+      <div className="upload-container">
+        <header className="modal-header py-2">
+          <h2 className="modal-title">Tạo tin đăng</h2>
           <Button
             variant="light"
-            onClick={props.handleClose}
-            className="close-btn"
+            onClick={() => history.push("/search")}
+            className="close-btn mx-2"
           >
             <FontAwesomeIcon icon={faTimes} />
           </Button>
-        </Modal.Header>
-        <Modal.Body className="row">
+        </header>
+        <div className="row mt-3 mx-2">
           {/* Modal content */}
           <div className="col-sm-1 col-md-3 "> </div>
           <Form className="col-sm-10 col-md-6">
@@ -476,6 +509,8 @@ const UploadPost = (props) => {
                     Tên liên hệ
                   </Form.Label>
                   <Form.Control
+                    readOnly={true}
+                    disabled={true}
                     placeholder="Điền tên của bạn"
                     className={
                       checkValidInput.host_name
@@ -491,6 +526,8 @@ const UploadPost = (props) => {
                     Số điện thoại
                   </Form.Label>
                   <Form.Control
+                    readOnly={true}
+                    disabled={true}
                     placeholder="Điền số điện thoại của bạn"
                     className={
                       checkValidInput.phone
@@ -506,6 +543,8 @@ const UploadPost = (props) => {
                     Địa chỉ email
                   </Form.Label>
                   <Form.Control
+                    readOnly={true}
+                    disabled={true}
                     placeholder="Điền email của bạn"
                     className={
                       checkValidInput.email
@@ -576,17 +615,25 @@ const UploadPost = (props) => {
             </section>
           </Form>
           <div className="col-sm-1 col-md-3"> </div>
-        </Modal.Body>
+        </div>
 
-        <Modal.Footer className="modal-footer">
-          <div className="d-flex justify-content-end gap-2">
-            <Button variant="outline-dark">Xem trước</Button>
+        <footer className="modal-footer py-2">
+          <div className="d-flex justify-content-end gap-2 px-3">
+            <Button variant="outline-dark" onClick={() => handlePreview()}>
+              Xem trước
+            </Button>
             <Button variant="dark" onClick={() => handleSubmit()}>
               Đăng bài
             </Button>
           </div>
-        </Modal.Footer>
-      </Modal>
+        </footer>
+      </div>
+
+      <PostPreview
+        house={postData}
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+      />
     </>
   );
 };

@@ -9,20 +9,19 @@ const Sidebar = (props) => {
   const location = useHistory();
 
   const handleSearch = () => {
-    const searchText = "";
+    const searchtext = "";
     const city = "";
     const district = "";
     const time = "";
     const rating = "";
 
-    const query = { searchText, city, district, price, area, time, rating };
+    const query = { searchtext, city, district, price, area, time, rating };
     const queryParams = new URLSearchParams(query).toString();
     location.push(`/search?${queryParams}`);
   };
 
   useEffect(() => {
     handleSearch();
-    console.log(">>> search!");
   }, [price, area]);
 
   return (

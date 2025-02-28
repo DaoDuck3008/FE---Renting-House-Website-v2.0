@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import _ from "lodash";
+import { toast } from "react-toastify";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,28 +10,94 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import "./PostList.scss";
-import { fetchPostWithUserId } from "../../services/UserService";
+import {
+  fetchPostWithUserId,
+  deleteHouseAPI,
+} from "../../services/PostService";
+import EditPost from "../Posts/EditPost";
+import { updatePost } from "../../services/PostService";
+import ReactPaginate from "react-paginate";
 
 const PostListByUserId = ({ userId }) => {
   const [posts, setPosts] = useState([]);
+  const [selectedHouse, setSelectedHouse] = useState(null);
+
+  const [showEditPost, setShowEditPost] = useState(false);
+
+  //Các biến phục vụ phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const currentLimit = 4; // số lượng bài đăng trong 1 trang
 
   const callFetchPostsByUserId = async () => {
-    console.log(">>> check userId: ", userId);
-    let response = await fetchPostWithUserId(userId);
+    // console.log(">>> check userId: ", userId);
+    const query = new URLSearchParams();
+    query.append("page", currentPage);
+    query.append("limit", currentLimit);
+    query.append("userid", userId);
+
+    let response = await fetchPostWithUserId(query.toString());
     if (response && response.data && +response.data.EC === 0) {
-      setPosts(response.data.DT);
+      setTotalPages(response.data.DT.totalPages);
+      setPosts(response.data.DT.posts);
+      // console.log(">>> check response: ", response.data.DT);
     }
   };
 
   useEffect(() => {
     callFetchPostsByUserId();
-  }, []);
+  }, [currentPage]);
+
+  // Mở modal chỉnh sửa
+  const handleEdit = (house) => {
+    setSelectedHouse(house);
+    setShowEditPost(true);
+  };
+
+  // Khi bấm "Xóa"
+  const handleDelete = async (houseId) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa bài đăng này không?"))
+      return;
+    try {
+      let res = await deleteHouseAPI(houseId);
+      if (res && res.data && res.data.success) {
+        toast.success("Xóa bài đăng thành công!");
+        callFetchPostsByUserId();
+      } else {
+        toast.error("Xóa thất bại!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Lỗi khi xóa bài đăng!");
+    }
+  };
+
+  const handleUpdateSuccess = async (houseEdit) => {
+    setShowEditPost(false);
+    let response = await updatePost(houseEdit);
+    if (response && response.data && +response.data.EC === 0) {
+      toast.success("Thay đổi bài viết thành công!");
+      await callFetchPostsByUserId();
+    } else {
+      toast.error(`${response.data.EM}`);
+    }
+
+    // console.log(">>> check house after edit: ", houseEdit);
+    // callFetchPostsByUserId();
+  };
+
+  // ----------------------------PAGINATION----------------------------------
+
+  const handlePageChange = async (event) => {
+    setCurrentPage(+event.selected + 1);
+    await callFetchPostsByUserId();
+  };
 
   return (
     <>
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-8 col-md-12 ">
+      {posts?.length > 0 ? (
+        <>
+          <div className="container d-flex flex-column">
             {posts.map((post) => {
               return (
                 <Card
@@ -106,9 +172,7 @@ const PostListByUserId = ({ userId }) => {
                               style={{
                                 cursor: "pointer",
                               }}
-                              onClick={() =>
-                                console.log(">>> You have clicked on Edit")
-                              }
+                              onClick={() => handleEdit(post)}
                             >
                               <FontAwesomeIcon
                                 color="dark"
@@ -122,16 +186,14 @@ const PostListByUserId = ({ userId }) => {
                               style={{
                                 cursor: "pointer",
                               }}
-                              onClick={() =>
-                                console.log(">>> You have clicked on Delete")
-                              }
+                              onClick={() => handleDelete(post.house_id)}
                             >
                               <FontAwesomeIcon
                                 color="dark"
                                 icon={faTrash}
                                 size="sm"
                               />{" "}
-                              Xóa bài đăng
+                              Xóa bài
                             </Button>
                           </div>
                         </div>
@@ -141,9 +203,47 @@ const PostListByUserId = ({ userId }) => {
                 </Card>
               );
             })}
+
+            <div className="mt-2 mx-auto">
+              <ReactPaginate
+                previousLabel="Previous"
+                nextLabel="Next"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakLabel="..."
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                pageCount={totalPages}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageChange}
+                containerClassName="pagination"
+                activeClassName="active"
+              />
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      ) : (
+        <>
+          <div className="d-flex justify-content-center ">
+            <p>Không có dữ liệu</p>
+          </div>
+        </>
+      )}
+
+      {/* Modal chỉnh sửa */}
+      {showEditPost && selectedHouse && (
+        <EditPost
+          house={selectedHouse}
+          isOpen={showEditPost}
+          onClose={() => setShowEditPost(false)}
+          handleEditData={handleUpdateSuccess}
+        />
+      )}
     </>
   );
 };

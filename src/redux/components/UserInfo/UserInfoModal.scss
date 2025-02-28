@@ -1,10 +1,7 @@
 .fullscreen-page {
   width: 100vw;
-
+  min-height: 100vh;
   background-color: white; /* Nền trắng giống Modal */
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   .page-content {
     .modal-container {

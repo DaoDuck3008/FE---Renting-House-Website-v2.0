@@ -3,17 +3,19 @@ import "./Navbar.scss";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
 import LoginModal from "../Modal/LoginModal";
 import RegisterModal from "../Modal/RegisterModal";
-import UploadPost from "../HousePosts/UploadPost";
 import { useEffect } from "react";
 import { deleteUserInfo, fetchUserInfo } from "../../services/UserService";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faHouseUser } from "@fortawesome/free-solid-svg-icons";
+import { Dropdown } from "react-bootstrap";
 
 const Navbar = () => {
   const [isShowLoginModal, setIsShowLoginModal] = useState(false);
   const [isShowRegisterModal, setIsShowRegisterModal] = useState(false);
   const [isLogin, setLogin] = useState(false);
-  const [isShowUploadModal, setIsShowUploadModal] = useState(false);
+  const [username, setUsername] = useState("");
 
   const history = useHistory();
 
@@ -27,8 +29,9 @@ const Navbar = () => {
 
   const checkUserInfo = async () => {
     const response = await fetchUserInfo();
-    console.log(">>> response: ", response);
+    // console.log(">>> response: ", response);
     if (response && response.data && +response.data.EC === 0) {
+      setUsername(response.data.DT.payload.username);
       setLogin(true);
     } else {
     }
@@ -52,15 +55,12 @@ const Navbar = () => {
     setIsShowRegisterModal(true);
   };
 
-  const handleCloseUploadModal = () => {
-    setIsShowUploadModal(false);
-  };
-
   const handleOpenUserInfo = () => {
     history.push("/user-info");
   };
 
   const handleLogout = async () => {
+    history.push("/search");
     let response = await deleteUserInfo();
 
     if (response && response.data && +response.data.EC === 0) {
@@ -77,7 +77,7 @@ const Navbar = () => {
         <div className="container">
           {/* Logo */}
           <NavLink className="navbar-brand" to="/">
-            Renting House
+            <FontAwesomeIcon icon={faHouseUser} size="xl" /> Renting House
           </NavLink>
           {/* Navbar Toggler (dùng cho mobile) */}
           <button
@@ -98,7 +98,7 @@ const Navbar = () => {
                 <div className="mb-2">
                   <button
                     className="btn btn-danger me-2 mx-auto"
-                    onClick={() => setIsShowUploadModal(true)}
+                    onClick={() => history.push("/upload-post")}
                   >
                     Đăng bài
                   </button>
@@ -111,18 +111,29 @@ const Navbar = () => {
             <div className="d-flex">
               {isLogin ? (
                 <div>
-                  <button
-                    className="btn btn-outline-light me-2"
-                    onClick={() => handleOpenUserInfo()}
-                  >
-                    Profile
-                  </button>
-                  <button
-                    className="btn btn-light me-2"
-                    onClick={() => handleLogout()}
-                  >
-                    Logout
-                  </button>
+                  <Dropdown data-bs-theme="dark">
+                    <Dropdown.Toggle
+                      variant="dark"
+                      className="btn-outline-light"
+                      style={{ borderRadius: "20px" }}
+                    >
+                      <FontAwesomeIcon icon={faUser} /> {username}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        className="my-2"
+                        onClick={() => handleOpenUserInfo()}
+                      >
+                        Thông tin người dùng
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        className="my-2"
+                        onClick={() => handleLogout()}
+                      >
+                        Đăng xuất
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
               ) : (
                 <div>
@@ -157,11 +168,6 @@ const Navbar = () => {
         show={isShowRegisterModal}
         handleClose={handleCloseRegisterModal}
         handleOpenLogin={handleOpenLoginModal}
-      />
-      <UploadPost
-        title="Upload"
-        show={isShowUploadModal}
-        handleClose={handleCloseUploadModal}
       />
     </>
   );

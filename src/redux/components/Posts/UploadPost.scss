@@ -1,0 +1,84 @@
+.upload-container {
+  font-family: "Arial", sans-serif;
+  background-color: #f9f9f9;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .close-btn {
+    border: none;
+    font-size: 1.2rem;
+    color: black;
+  }
+
+  .modal-section {
+    margin-bottom: 1.5rem;
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .form-control {
+      border: 1px solid black;
+      border-radius: 20px;
+    }
+
+    .section-label {
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .custom-input {
+      border: 1px solid black;
+      border-radius: 20px;
+
+      .no-border {
+        border: none;
+        background-color: initial;
+      }
+
+      .no-border:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    .custom-button {
+      display: inline-block;
+      border: 1px solid black;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .custom-button:checked {
+      background-color: #888;
+    }
+
+    .custom-button:hover {
+      background-color: unset; /* Không thay đổi màu nền */
+      color: unset; /* Không thay đổi màu chữ */
+      border-color: unset;
+      pointer-events: auto; /* Không thay đổi màu viền */
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ddd;
+  }
+}

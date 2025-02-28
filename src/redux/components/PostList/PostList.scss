@@ -1,7 +1,6 @@
 .medium-card {
   max-width: 850px;
-  max-height: 250px;
-
+  max-height: 450px;
   .right-side2 {
     .title-font {
       font-size: 13px;
@@ -31,7 +30,7 @@
 }
 .small-card {
   max-width: 640px;
-  max-height: 190px;
+  max-height: 450px;
 
   .right-side2 {
     .title-font {
@@ -57,6 +56,22 @@
       text-overflow: ellipsis;
       line-clamp: 2; /* Số dòng hiển thị tối đa */
       -webkit-box-orient: vertical;
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .medium-card,
+  .small-card {
+    .left-side2,
+    .right-side2 {
+      width: 100%;
+    }
+    .left-side2 img {
+      height: auto;
+    }
+    .right-side2 {
+      height: auto;
     }
   }
 }

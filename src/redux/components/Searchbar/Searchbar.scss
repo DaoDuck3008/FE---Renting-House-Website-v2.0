@@ -1,5 +1,4 @@
 .container {
-  overflow: visible !important;
   .search-input-container {
     .no-focus {
       background-color: white;
@@ -34,26 +33,23 @@
   }
 
   .filter-options {
-    .btn {
-      white-space: nowarp;
+    .dropdown-container {
+      .dropdown-menu {
+        z-index: 1050;
+      }
     }
   }
 
   .filter-options::-webkit-scrollbar {
-    height: 5px; /* Độ cao thanh trượt */
-  }
-
-  .filter-options::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Màu nền track */
-    border-radius: 10px; /* Bo góc */
+    height: 8px;
   }
 
   .filter-options::-webkit-scrollbar-thumb {
-    background: #888; /* Màu thanh cuộn */
-    border-radius: 10px; /* Bo góc */
+    background-color: #ccc;
+    border-radius: 4px;
   }
 
   .filter-options::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Màu khi hover */
+    background-color: #aaa;
   }
 }

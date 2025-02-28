@@ -15,16 +15,16 @@ const deleteUserInfo = async () => {
 };
 
 const updateUserInfo = async (userId, updateData) => {
-  return await axios.patch("http://localhost:2000/api/v1/update/user-info", {
-    userId,
-    updateData,
-  });
-};
-
-const fetchPostWithUserId = async (userId) => {
-  return await axios.get(
-    `http://localhost:2000/api/v1/house/byUserId/${userId}`
+  return await axios.patch(
+    "http://localhost:2000/api/v1/update/user-info",
+    {
+      userId,
+      updateData,
+    },
+    {
+      withCredentials: true,
+    }
   );
 };
 
-export { fetchUserInfo, deleteUserInfo, updateUserInfo, fetchPostWithUserId };
+export { fetchUserInfo, deleteUserInfo, updateUserInfo };

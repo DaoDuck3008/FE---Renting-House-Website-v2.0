@@ -1,8 +1,8 @@
 import "./HomePage.scss";
 import SearchBar from "../Searchbar/Searchbar";
-import { useState } from "react";
-import { Button, Container } from "react-bootstrap";
-import PostList from "../HousePosts/PostList";
+import { useState, useEffect } from "react";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import PostList from "../PostList/PostList";
 import Sidebar from "../Searchbar/SideBar";
 
 const HomePage = (props) => {
@@ -16,6 +16,25 @@ const HomePage = (props) => {
     }
   };
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1150px)");
+
+    // Xử lý khi thay đổi kích thước màn hình
+    const handleResize = (e) => {
+      if (!e.matches) {
+        setDisplayMap(false);
+      }
+    };
+
+    //Lắng nghe thay đổi kích thước
+    mediaQuery.addEventListener("change", handleResize);
+
+    //Dọp dẹp khi component bị hủy
+    return () => {
+      mediaQuery.removeEventListener("change", handleResize);
+    };
+  }, []);
+
   return (
     <>
       <span className="home-container">
@@ -26,29 +45,32 @@ const HomePage = (props) => {
             }
           >
             <SearchBar />
-            <Button onClick={() => handleToggleMap()}>Map</Button>
+            <Button
+              className="d-lg-block d-none"
+              onClick={() => handleToggleMap()}
+            >
+              Map
+            </Button>
             <hr />
             <Container>
-              <div className="row ">
+              <Row>
                 <div
                   className={
                     displayMap ? "col-12 row" : "col-lg-8 col-md-12  row"
                   }
                 >
-                  <div className="col-lg-1 "></div>
-                  <div className="col-lg-11 col-md-12">
+                  <div className="col-lg-12 col-md-12">
                     <PostList />
                   </div>
-                  <div className="col-lg-1"></div>
                 </div>
                 <div
                   className={
-                    displayMap ? "col-4 d-none" : "col-lg-4 md-d-none "
+                    displayMap ? "col-4  d-none" : "col-lg-4 d-lg-block d-none "
                   }
                 >
                   <Sidebar />
                 </div>
-              </div>
+              </Row>
             </Container>
           </div>
           <div className={displayMap ? "col-7 border right-side" : "d-none"}>

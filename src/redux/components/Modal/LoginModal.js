@@ -10,6 +10,7 @@ import { useState } from "react";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/LoginRegister";
+import Cookies from "js-cookie";
 
 const LoginModal = (props) => {
   const validInputDefault = {
@@ -63,9 +64,14 @@ const LoginModal = (props) => {
       // console.log(">>> userData: ", userData);
       let response = await loginUser(userData.emailPhone, userData.password);
       if (response && response.data && +response.data.EC === 0) {
+        Cookies.set("isLogin", "true", {
+          expires: 7,
+          path: "/",
+        });
         props.checkLogin(true);
 
         props.handleClose();
+        window.location.reload();
       } else {
         toast.error(`${response.data.EM}`);
       }

@@ -1,0 +1,210 @@
+/* -------------------- Cấu trúc Modal -------------------- */
+.house-modal .modal-dialog {
+  /* Modal rộng */
+  margin: auto;
+  .house-modal-content {
+    color: rgb(58, 12, 22);
+    border-radius: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Cuộn toàn bộ modal */
+
+    /* -------------------- Layout Chính -------------------- */
+    .house-detail-wrapper {
+      /* -------------------- Phần trên: Hình ảnh & Thông tin nhà -------------------- */
+      .house-info-container {
+        /* Chiếm 60% modal */
+        color: rgb(58, 12, 22);
+
+        .house-image-container {
+          background: #f8f8f8;
+          border-radius: 8px;
+
+          .house-image {
+            .main-image {
+              width: 100%;
+              height: auto;
+              max-height: 300px;
+              object-fit: cover;
+              border-radius: 0px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+          }
+
+          .thumbnail-container {
+            display: inline-flex;
+            gap: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 10px;
+
+            .thumbnail {
+              width: 80px;
+              height: 50px;
+              object-fit: cover;
+              cursor: pointer;
+              border-radius: 4px;
+              transition: transform 0.2s ease-in-out;
+            }
+
+            .thumbnail:hover {
+              transform: scale(1.1);
+            }
+
+            .thumbnail.active {
+              border: 2px solid #007bff;
+            }
+          }
+
+          .thumbnail-container::-webkit-scrollbar {
+            height: 6px;
+          }
+
+          .thumbnail-container::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+          }
+        }
+
+        /* Thông tin nhà (Phải) */
+        .house-info-content {
+          /* Mạng xã hội */
+          .social-links-container {
+            .social-icon {
+              font-size: 20px;
+              cursor: pointer;
+              transition: 0.3s;
+            }
+
+            .social-icon:hover {
+              opacity: 0.7;
+            }
+          }
+
+          /* Thông tin chính */
+          .house-main-info {
+            .house-name {
+              font-size: 24px;
+              font-weight: 500;
+            }
+
+            .house-address {
+              font-size: 15px;
+            }
+
+            .house-price-area {
+              font-size: 25px;
+              font-weight: bold;
+              color: rgb(51, 45, 42);
+            }
+
+            .house-rating {
+              font-size: 20px;
+              font-weight: bold;
+              color: rgb(173, 44, 69);
+            }
+
+            .house-description {
+              font-size: 16px;
+              color: #333;
+            }
+
+            .contact-text {
+              font-size: 14px;
+              color: #555;
+            }
+          }
+        }
+      }
+
+      hr {
+        border: 2px solid #8c8b8b;
+      }
+
+      /* -------------------- Phần Dưới: Bình luận & Tiện ích -------------------- */
+      .house-lower-section {
+        .comments-section-container {
+          gap: 10px;
+
+          /* Bình luận (Trái - 50%) */
+
+          .comments-list {
+            flex: 1;
+            overflow-y: auto;
+
+            .comment-item {
+              background: #f9f9f9;
+            }
+          }
+
+          .comment-form {
+            border: 2px solid black;
+            border-radius: 20px;
+            .form-group {
+              select,
+              textarea {
+                border: 1px solid black;
+                border-radius: 20px;
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+              }
+            }
+          }
+        }
+        /* Tiện ích & Tóm tắt (Phải - 50%) */
+        .house-summary-container {
+          .house-utilities-container {
+            .utilities-title {
+              font-size: 24px;
+              font-weight: bold;
+            }
+
+            .utilities-grid {
+              font-size: 18px;
+            }
+          }
+
+          .house-description-container {
+            .description-title {
+              font-size: 24px;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* -------------------- Nút Liên Hệ Nằm Ngang -------------------- */
+.house-summary-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.btn-contact {
+  width: 90%;
+  padding: 8px 0;
+  font-size: 14px;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.btn-contact:hover {
+  background-color: #5a1224;
+}
+
+/* -------------------- Card Sticky -------------------- */
+
+/* -------------------- Nút Đóng Modal -------------------- */
+.close-modal-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+}
