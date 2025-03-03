@@ -489,7 +489,11 @@ const UploadPost = (props) => {
                         checked={cameraChecked}
                         value={1}
                         onClick={() =>
-                          handleToggleBtn(setCameraChecked, cameraChecked)
+                          handleToggleBtn(
+                            setCameraChecked,
+                            cameraChecked,
+                            "camera"
+                          )
                         }
                       >
                         <FontAwesomeIcon icon={faVideo} /> Camera

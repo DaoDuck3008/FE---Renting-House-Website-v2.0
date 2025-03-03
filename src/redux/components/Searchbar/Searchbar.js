@@ -12,9 +12,10 @@ import "../Modal/LoginModal";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { fetchDistricts } from "../../services/PostService";
+import { AddressAutofill, SearchBox } from "@mapbox/search-js-react";
 
 const SearchBar = () => {
-  const [text, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
   const [price, setPrice] = useState("");
@@ -43,7 +44,7 @@ const SearchBar = () => {
   }, [city]);
 
   const handleSearch = () => {
-    const query = { text, city, district, price, area, time, rating };
+    const query = { searchText, city, district, price, area, time, rating };
     console.log(">>> check query: ", query);
     const queryParams = new URLSearchParams(query).toString();
     // console.log(">>> check query in search bar: ", queryParams);
@@ -72,15 +73,16 @@ const SearchBar = () => {
       <div className="container my-2">
         <Stack direction="horizontal" gap={3}>
           <div className="d-flex pr-1 px-0 py-2 border rounded btn btn-light col-12 search-input-container">
-            <Form.Control
-              style={{
-                border: "none",
-              }}
-              className="me-auto mx-2 no-focus"
-              placeholder="Tìm kiếm theo từ khóa..."
-              value={text}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
+            <div style={{ width: "100%" }}>
+              <Form.Control
+                style={{ border: "none", width: "100%" }}
+                className="me-auto mx-2 no-focus"
+                placeholder="Tìm kiếm theo từ khóa..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+            </div>
+
             <Button
               variant="danger"
               className="d-flex align-items-center mx-2"

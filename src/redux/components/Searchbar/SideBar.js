@@ -9,13 +9,13 @@ const Sidebar = (props) => {
   const location = useHistory();
 
   const handleSearch = () => {
-    const searchtext = "";
+    const searchText = "";
     const city = "";
     const district = "";
     const time = "";
     const rating = "";
 
-    const query = { searchtext, city, district, price, area, time, rating };
+    const query = { searchText, city, district, price, area, time, rating };
     const queryParams = new URLSearchParams(query).toString();
     location.push(`/search?${queryParams}`);
   };
@@ -95,7 +95,7 @@ const Sidebar = (props) => {
             <ListGroup.Item action onClick={() => setArea("Dưới 30m2")}>
               Dưới 30m2
             </ListGroup.Item>
-            <ListGroup.Item onClick={() => setArea("30 - 50m2")}>
+            <ListGroup.Item action onClick={() => setArea("30 - 50m2")}>
               30 - 50m2
             </ListGroup.Item>
             <ListGroup.Item action onClick={() => setArea("50 - 80m2")}>

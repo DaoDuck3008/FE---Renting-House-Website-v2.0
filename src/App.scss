@@ -16,6 +16,7 @@ body {
     flex-direction: column;
     height: 100%;
     .app-header {
+      max-height: 20vh;
       flex-shrink: 0;
       position: sticky;
       top: 0;

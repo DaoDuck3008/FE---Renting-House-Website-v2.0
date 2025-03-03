@@ -24,7 +24,7 @@ const PostList = (props) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const currentLimit = 5;
+  const currentLimit = 4;
   useEffect(() => {
     callFetchAllPosts();
   }, [location.search, currentPage]);
@@ -93,7 +93,7 @@ const PostList = (props) => {
     <>
       {posts?.length > 0 ? (
         <>
-          <div className="container d-flex flex-column">
+          <div className="container postList-container d-flex flex-column">
             {posts.map((post) => {
               return (
                 <Card

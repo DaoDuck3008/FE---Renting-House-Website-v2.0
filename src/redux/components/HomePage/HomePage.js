@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import PostList from "../PostList/PostList";
 import Sidebar from "../Searchbar/SideBar";
+import MapboxExample from "../MapboxExample/MapboxExample";
 
 const HomePage = (props) => {
-  const [displayMap, setDisplayMap] = useState(false);
+  const [displayMap, setDisplayMap] = useState(true);
 
   const handleToggleMap = () => {
     if (displayMap) {
@@ -38,12 +39,9 @@ const HomePage = (props) => {
   return (
     <>
       <span className="home-container">
-        <div className="row">
-          <div
-            className={
-              displayMap ? "col-5 border left-side " : "border left-side"
-            }
-          >
+        {/* LEFT SIDE */}
+        <Row className="g-0">
+          <Col className={displayMap ? "col-5  left-side " : " left-side"}>
             <SearchBar />
             <Button
               className="d-lg-block d-none"
@@ -72,11 +70,13 @@ const HomePage = (props) => {
                 </div>
               </Row>
             </Container>
-          </div>
-          <div className={displayMap ? "col-7 border right-side" : "d-none"}>
-            right Side
-          </div>
-        </div>
+          </Col>
+
+          {/* RIGHT SIDE */}
+          <Col className={displayMap ? "col-7 " : "d-none"}>
+            <MapboxExample />
+          </Col>
+        </Row>
       </span>
     </>
   );

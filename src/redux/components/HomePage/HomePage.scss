@@ -11,9 +11,15 @@ body {
     .row {
       .left-side {
         min-height: 100vh;
+        max-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
         hr {
           border-width: 2px;
         }
+      }
+      .right-side {
+        max-height: 100vh;
       }
     }
   }
