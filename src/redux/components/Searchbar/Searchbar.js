@@ -12,7 +12,6 @@ import "../Modal/LoginModal";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { fetchDistricts } from "../../services/PostService";
-import { AddressAutofill, SearchBox } from "@mapbox/search-js-react";
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState("");
@@ -45,7 +44,7 @@ const SearchBar = () => {
 
   const handleSearch = () => {
     const query = { searchText, city, district, price, area, time, rating };
-    console.log(">>> check query: ", query);
+    // console.log(">>> check query: ", query);
     const queryParams = new URLSearchParams(query).toString();
     // console.log(">>> check query in search bar: ", queryParams);
     location.push(`/search?${queryParams}`);
@@ -147,8 +146,9 @@ const SearchBar = () => {
 
                 <Dropdown.Menu>
                   {allDistricts.length ? (
-                    allDistricts.map((district) => (
+                    allDistricts.map((district, index) => (
                       <Dropdown.Item
+                        key={index}
                         onClick={() => setDistrict(`${district.district_name}`)}
                       >
                         {district.district_name}

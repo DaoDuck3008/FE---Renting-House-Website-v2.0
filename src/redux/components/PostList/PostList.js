@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { fetchAllPosts } from "../../services/PostService";
-import _ from "lodash";
-import { Card, Row, Col, ToggleButton } from "react-bootstrap";
+import { Card, Row, Col, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,
   faDollarSign,
   faStar,
-  faHeart,
   faStarHalfAlt,
+  faLocationArrow,
 } from "@fortawesome/free-solid-svg-icons";
 import "./PostList.scss";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useHistory,
+  useLocation,
+} from "react-router-dom/cjs/react-router-dom.min";
 import HouseDetailModal from "./HouseDetailModal";
 import ReactPaginate from "react-paginate";
 
@@ -21,22 +23,29 @@ const PostList = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Kiểm soát modal
 
   const location = useLocation();
+  const history = useHistory();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const currentLimit = 4;
-  useEffect(() => {
-    callFetchAllPosts();
-  }, [location.search, currentPage]);
+
+  const handleFlyToHouse = (houseId) => {
+    setSelectedHouseId(houseId);
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("house-id", houseId); // Thêm hoặc cập nhật house_id vào URL
+
+    history.push(`/search?${searchParams.toString()}`);
+  };
 
   const callFetchAllPosts = async () => {
     const searchParams = new URLSearchParams(location.search);
-    searchParams.append("page", currentPage);
-    searchParams.append("limit", currentLimit);
+    searchParams.set("page", currentPage);
+    searchParams.set("limit", currentLimit);
 
-    // console.log("check query object::", searchParams.toString()); // Lấy query từ URL
-
-    // console.log("check query object::", searchParams);
+    const newSearch = searchParams.toString();
+    if (location.search !== `?${newSearch}`) {
+      history.push(`/search?${newSearch}`);
+    }
 
     let response = await fetchAllPosts(searchParams.toString());
     if (response && response.data && +response.data.EC === 0) {
@@ -44,6 +53,10 @@ const PostList = (props) => {
       setPosts(response.data.DT.posts);
     }
   };
+
+  useEffect(() => {
+    callFetchAllPosts();
+  }, [location.search, currentPage]);
 
   const handleClickOnPost = (house_id) => {
     setSelectedHouseId(house_id);
@@ -89,20 +102,27 @@ const PostList = (props) => {
     await fetchAllPosts();
   };
 
+  //-------------------------------------------------------------------------
+
   return (
     <>
       {posts?.length > 0 ? (
         <>
           <div className="container postList-container d-flex flex-column">
-            {posts.map((post) => {
+            {posts.map((post, index) => {
               return (
                 <Card
-                  key={posts.house_id}
+                  key={index}
                   className={
                     props.isOpenMap ? "small-card my-1" : "medium-card my-1"
                   }
-                  onClick={() => handleClickOnPost(post.house_id)}
-                  style={{ cursor: "pointer" }}
+                  // style={{
+                  //   border:
+                  //     post.house_id === selectedHouseId
+                  //       ? "5px solid rgb(113, 193, 113)"
+                  //       : "1px solid #ddd",
+                  //   transition: "border 0.3s ease-in-out",
+                  // }}
                 >
                   <Row className="flex-column flex-md-row">
                     <Col xs={12} md={4} className="left-side2 mb-2 mb-md-0">
@@ -119,7 +139,12 @@ const PostList = (props) => {
                     </Col>
                     <Col xs={12} md={8} className="right-side2">
                       <Card.Body>
-                        <h4 className="title-font">{post.house_name}</h4>
+                        <div
+                          onClick={() => handleClickOnPost(post.house_id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <h4 className="title-font">{post.house_name}</h4>
+                        </div>
                         <p className="highlight-font">
                           {<FontAwesomeIcon icon={faDollarSign} />} Giá:{" "}
                           {post.cost}đ - Diện tích: {post.area}m²
@@ -137,20 +162,21 @@ const PostList = (props) => {
                           </div>
                           <div className="mx-auto"></div>
                           <div>
-                            <ToggleButton
+                            <Button
                               checked="true"
                               variant="light"
                               style={{
                                 border: "1px solid gray",
                                 cursor: "pointer",
                               }}
+                              onClick={() => handleFlyToHouse(post.house_id)}
                             >
                               <FontAwesomeIcon
-                                color="gray"
-                                icon={faHeart}
-                                size="sm"
+                                color="blue"
+                                icon={faLocationArrow}
+                                size="md"
                               />
-                            </ToggleButton>
+                            </Button>
                           </div>
                         </div>
                       </Card.Body>
