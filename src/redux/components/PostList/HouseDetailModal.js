@@ -48,8 +48,8 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
           `http://localhost:2000/api/v1/house/${houseId}`
         );
         // Kiểm tra dữ liệu trả về từ API
-        if (response.data.success && response.data.data) {
-          setHouse(response.data.data); // Chỉ lấy phần "data"
+        if (response && response.data && +response.data.EC === 0) {
+          setHouse(response.data.DT); // Chỉ lấy phần "data"
         } else {
           console.error("Dữ liệu trả về không hợp lệ:", response.data);
         }

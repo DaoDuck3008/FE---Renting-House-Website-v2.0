@@ -60,7 +60,7 @@ const PostListByUserId = ({ userId }) => {
       return;
     try {
       let res = await deleteHouseAPI(houseId);
-      if (res && res.data && res.data.success) {
+      if (res && res.data && +res.data.EC === 0) {
         toast.success("Xóa bài đăng thành công!");
         callFetchPostsByUserId();
       } else {
