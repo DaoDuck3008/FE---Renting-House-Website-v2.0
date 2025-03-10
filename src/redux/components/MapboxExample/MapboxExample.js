@@ -186,7 +186,11 @@ const MapComponent = () => {
   };
 
   // Cập nhật vị trí khi marker được kéo
-  const onMarkerDragStart = () => setShowCircle(false);
+  const onMarkerDragStart = () => {
+    setShowCircle(false);
+    setRoute(null);
+    setRouteInfo({});
+  };
   const onMarkerDragEnd = (event) => {
     const newPosition = {
       longitude: event.lngLat.lng,

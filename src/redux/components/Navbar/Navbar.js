@@ -62,6 +62,7 @@ const Navbar = () => {
           {/* Logo */}
           <NavLink className="navbar-brand" to="/">
             <FontAwesomeIcon icon={faHouseUser} size="xl" /> Renting House
+            Website
           </NavLink>
           {/* Navbar Toggler (dùng cho mobile) */}
           <button

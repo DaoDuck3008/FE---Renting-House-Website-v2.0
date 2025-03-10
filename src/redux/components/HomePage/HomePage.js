@@ -43,12 +43,16 @@ const HomePage = (props) => {
         <Row className="g-0">
           <Col className={displayMap ? "col-5  left-side " : " left-side"}>
             <SearchBar />
-            <Button
-              className="d-lg-block d-none"
-              onClick={() => handleToggleMap()}
-            >
-              Map
-            </Button>
+            <Container>
+              <Button
+                variant="success"
+                className="d-lg-block d-none"
+                onClick={() => handleToggleMap()}
+              >
+                Tìm kiếm với bản đồ
+              </Button>
+            </Container>
+
             <hr />
             <Container>
               <Row>

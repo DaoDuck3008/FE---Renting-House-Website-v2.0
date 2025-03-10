@@ -25,7 +25,7 @@ const Dropzone = ({ onFilesUploaded }) => {
     if (rejectedFiles?.length) {
       setRejected((previousFiles) => [...previousFiles, ...rejectedFiles]);
     }
-    console.log(">>> Images are lager than 5MB: ", rejected);
+    // console.log(">>> Images are lager than 5MB: ", rejected);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -84,7 +84,7 @@ const Dropzone = ({ onFilesUploaded }) => {
         cloudImgs.push(img.url);
       });
 
-      console.log(">>> check cloud imgs: ", cloudImgs);
+      // console.log(">>> check cloud imgs: ", cloudImgs);
 
       onFilesUploaded(cloudImgs);
 

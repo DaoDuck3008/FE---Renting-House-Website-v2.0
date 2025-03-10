@@ -109,7 +109,7 @@ const SearchBar = () => {
                   variant="btn btn-light"
                   id="dropdown-basic"
                 >
-                  {city ? `${city}` : "thành phố"}
+                  {city ? `${city}` : "Thành phố"}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu

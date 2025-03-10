@@ -45,7 +45,7 @@ const UserInfoModal = (props) => {
       setUserInfo(response.data.DT.payload);
       // console.log("check userId: ", response.data.DT.payload.id);
       userId = response.data.DT.payload.id;
-      console.log(">>> check userId: ", userId);
+      // console.log(">>> check userId: ", userId);
     }
   };
 

@@ -216,7 +216,7 @@ const UploadPost = (props) => {
     if (filesFromDropzone?.length) {
       postData.images = filesFromDropzone;
     }
-    console.log(">>> check postData: ", postData);
+    // console.log(">>> check postData: ", postData);
     setShowPreview(true);
   };
 
