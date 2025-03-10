@@ -29,14 +29,14 @@ const fetchRoute = async (start, end) => {
 
 const getAllHouse = async (query) => {
   return await axios.get(
-    `http://localhost:2000/api/v1/posts/read-all?${query}`
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/read-all?${query}`
   );
 };
 
 const giveFilterHouseToBE = async (filterHouseData) => {
   const queryFilterData = new URLSearchParams(filterHouseData).toString();
   return await axios.get(
-    `http://localhost:2000/api/v1/posts/read?${queryFilterData}`,
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/read?${queryFilterData}`,
     {
       withCredentials: true,
     }

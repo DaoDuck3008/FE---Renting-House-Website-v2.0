@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faHouseUser } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown } from "react-bootstrap";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [isShowLoginModal, setIsShowLoginModal] = useState(false);
@@ -37,24 +38,6 @@ const Navbar = () => {
     }
   };
 
-  const handleCloseLoginModal = () => {
-    setIsShowLoginModal(false);
-  };
-
-  const handleCloseRegisterModal = () => {
-    setIsShowRegisterModal(false);
-  };
-
-  const handleOpenLoginModal = () => {
-    setIsShowRegisterModal(false);
-    setIsShowLoginModal(true);
-  };
-
-  const handleOpenRegisterModal = () => {
-    setIsShowLoginModal(false);
-    setIsShowRegisterModal(true);
-  };
-
   const handleOpenUserInfo = () => {
     history.push("/user-info");
   };
@@ -66,6 +49,7 @@ const Navbar = () => {
     if (response && response.data && +response.data.EC === 0) {
       setLogin(false);
       setIsShowLoginModal(true);
+      Cookies.remove("isLogin");
     } else {
       toast.error(`${response.data.EM}`);
     }
@@ -159,15 +143,21 @@ const Navbar = () => {
       <LoginModal
         title="Login"
         show={isShowLoginModal}
-        handleClose={handleCloseLoginModal}
-        handleOpenRegister={handleOpenRegisterModal}
+        handleClose={() => setIsShowLoginModal(false)}
+        handleOpenRegister={() => {
+          setIsShowLoginModal(false);
+          setIsShowRegisterModal(true);
+        }}
         checkLogin={handleLogin}
       />
       <RegisterModal
         title="Register"
         show={isShowRegisterModal}
-        handleClose={handleCloseRegisterModal}
-        handleOpenLogin={handleOpenLoginModal}
+        handleClose={() => setIsShowRegisterModal(false)}
+        handleOpenLogin={() => {
+          setIsShowRegisterModal(false);
+          setIsShowLoginModal(true);
+        }}
       />
     </>
   );

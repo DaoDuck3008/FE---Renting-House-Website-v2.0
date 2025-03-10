@@ -45,7 +45,7 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
     try {
       if (houseId) {
         const response = await axios.get(
-          `http://localhost:2000/api/v1/house/${houseId}`
+          `${process.env.REACT_APP_BACKEND_API_URL}/house/${houseId}`
         );
         // Kiểm tra dữ liệu trả về từ API
         if (response && response.data && +response.data.EC === 0) {
@@ -97,7 +97,7 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
         return;
       }
       const response = await axios.post(
-        `http://localhost:2000/api/v1/comment/house/${houseId}`,
+        `${process.env.REACT_APP_BACKEND_API_URL}/comment/house/${houseId}`,
         {
           rater_id: userId, // ID user đang đăng nhập, có thể lấy từ state nếu có
           rater_name: username,

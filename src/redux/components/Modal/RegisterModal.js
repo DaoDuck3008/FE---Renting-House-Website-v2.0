@@ -253,9 +253,18 @@ const RegisterModal = (props) => {
                   <hr className="horizontal-line"></hr>
                   <div className="pb-3">
                     <div className="have-account-container">
-                      <a href="#" onClick={() => props.handleOpenLogin}>
+                      <Button
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "black",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                        onClick={props.handleOpenLogin}
+                      >
                         Already have Account?
-                      </a>
+                      </Button>
                     </div>
                   </div>
                   <div className="login-btn-container row">

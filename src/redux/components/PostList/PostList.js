@@ -163,7 +163,7 @@ const PostList = (props) => {
                           <div className="mx-auto"></div>
                           <div>
                             <Button
-                              checked="true"
+                              checked={true}
                               variant="light"
                               style={{
                                 border: "1px solid gray",
@@ -174,7 +174,7 @@ const PostList = (props) => {
                               <FontAwesomeIcon
                                 color="blue"
                                 icon={faLocationArrow}
-                                size="md"
+                                size="lg"
                               />
                             </Button>
                           </div>

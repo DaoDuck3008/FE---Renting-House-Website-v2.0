@@ -168,8 +168,9 @@ const UploadPost = (props) => {
     if (!postData.images.length) {
       setCheckValidInput((prev) => ({
         ...prev,
-        ["images"]: false,
+        images: false,
       }));
+
       check = false;
       toast.error(`You must add at least a picture!`);
     }

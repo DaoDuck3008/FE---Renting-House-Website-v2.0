@@ -175,9 +175,18 @@ const LoginModal = (props) => {
                     </div>
 
                     <p>Or Sign Up Using</p>
-                    <a href="#" onClick={props.handleOpenRegister}>
-                      Sign Up
-                    </a>
+                    <Button
+                      onClick={props.handleOpenRegister}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "black",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Đăng ký
+                    </Button>
                   </div>
                 </Form>
               </Stack>

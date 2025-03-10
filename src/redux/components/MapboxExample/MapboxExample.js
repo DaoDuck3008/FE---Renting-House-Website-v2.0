@@ -330,6 +330,7 @@ const MapComponent = () => {
                 </p>
                 <div className="d-flex flex-column align-items-center">
                   <img
+                    alt="house"
                     className="img-fluid rounded"
                     style={{ maxHeight: "150px", maxWidth: "200px" }}
                     src={selectedHouse.main_img}

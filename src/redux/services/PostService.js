@@ -2,7 +2,7 @@ import axios from "axios";
 
 const fetchAllPosts = async (queryParams) => {
   return await axios.get(
-    `http://localhost:2000/api/v1/posts/read?${queryParams}`,
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/read?${queryParams}`,
     {
       withCredentials: true,
     }
@@ -10,29 +10,32 @@ const fetchAllPosts = async (queryParams) => {
 };
 
 const fetchDistricts = async (city) => {
-  return await axios.get(`http://localhost:2000/api/v1/districts/read`, {
-    params: {
-      city: city,
-    },
-  });
+  return await axios.get(
+    `${process.env.REACT_APP_BACKEND_API_URL}/districts/read`,
+    {
+      params: {
+        city: city,
+      },
+    }
+  );
 };
 
 const uploadAPost = async (postData) => {
   return await axios.post(
-    "http://localhost:2000/api/v1/posts/upload",
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/upload`,
     postData
   );
 };
 
 const fetchPostWithUserId = async (query) => {
   return await axios.get(
-    `http://localhost:2000/api/v1/posts/read/byUserId?${query}`
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/read/byUserId?${query}`
   );
 };
 
 const deleteHouseAPI = async (houseId) => {
   return await axios.delete(
-    `http://localhost:2000/api/v1/posts/delete/${houseId}`,
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/delete/${houseId}`,
     {
       withCredentials: true,
     }
@@ -41,7 +44,7 @@ const deleteHouseAPI = async (houseId) => {
 
 const updatePost = async (editData) => {
   return await axios.post(
-    `http://localhost:2000/api/v1/posts/update`,
+    `${process.env.REACT_APP_BACKEND_API_URL}/posts/update`,
     editData
   );
 };

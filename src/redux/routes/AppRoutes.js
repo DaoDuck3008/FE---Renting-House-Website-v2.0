@@ -15,8 +15,9 @@ const AppRoutes = (props) => {
         <Route path="/search" exact>
           <HomePage />
         </Route>
-        <Route path="/login">Login</Route>
-        <Route path="/register">Register</Route>
+        <Route path="/login">
+          <HomePage />
+        </Route>
 
         <Route path="/mapbox">
           <MapboxExample />
