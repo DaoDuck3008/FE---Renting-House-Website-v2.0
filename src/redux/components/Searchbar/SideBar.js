@@ -29,7 +29,10 @@ const Sidebar = (props) => {
       <div className="side-container container">
         <Card className="mx-2 mb-2">
           <div className="mt-2">
-            <h6 className="mx-2" style={{ fontWeight: "bold" }}>
+            <h6
+              className="mx-2"
+              style={{ fontWeight: "bold", fontSize: "20px" }}
+            >
               Lọc theo khoảng giá
             </h6>
           </div>
@@ -45,10 +48,18 @@ const Sidebar = (props) => {
             <ListGroup.Item
               action
               onClick={() => {
-                setPrice("1 - 3 triệu");
+                setPrice("1 - 2 triệu");
               }}
             >
-              1 - 3 triệu
+              1 - 2 triệu
+            </ListGroup.Item>
+            <ListGroup.Item
+              action
+              onClick={() => {
+                setPrice("2 - 3 triệu");
+              }}
+            >
+              2 - 3 triệu
             </ListGroup.Item>
             <ListGroup.Item
               action
@@ -61,51 +72,35 @@ const Sidebar = (props) => {
             <ListGroup.Item
               action
               onClick={() => {
-                setPrice("5 - 8 triệu");
+                setPrice("Trên 5 triệu");
               }}
             >
-              5 - 8 triệu
-            </ListGroup.Item>
-            <ListGroup.Item
-              action
-              onClick={() => {
-                setPrice("8 - 10 triệu");
-              }}
-            >
-              8 - 10 triệu
-            </ListGroup.Item>
-            <ListGroup.Item
-              action
-              onClick={() => {
-                setPrice("Trên 10 triệu");
-              }}
-            >
-              Trên 10 triệu
+              Trên 5 triệu
             </ListGroup.Item>
           </ListGroup>
         </Card>
 
         <Card className="mx-2 my-1">
           <div className="mt-2">
-            <h6 className="mx-2" style={{ fontWeight: "bold" }}>
+            <h6
+              className="mx-2"
+              style={{ fontWeight: "bold", fontSize: "20px" }}
+            >
               Lọc theo diện tích
             </h6>
           </div>
           <ListGroup variant="flush">
-            <ListGroup.Item action onClick={() => setArea("Dưới 30m2")}>
-              Dưới 30m2
+            <ListGroup.Item action onClick={() => setArea("Dưới 20m2")}>
+              Dưới 20m2
             </ListGroup.Item>
-            <ListGroup.Item action onClick={() => setArea("30 - 50m2")}>
-              30 - 50m2
+            <ListGroup.Item action onClick={() => setArea("20 - 30m2")}>
+              20 - 30m2
             </ListGroup.Item>
-            <ListGroup.Item action onClick={() => setArea("50 - 80m2")}>
-              50 - 80m2
+            <ListGroup.Item action onClick={() => setArea("30 - 40m2")}>
+              30 - 40m2
             </ListGroup.Item>
-            <ListGroup.Item action onClick={() => setArea("80 - 100m2")}>
-              80 - 100m2
-            </ListGroup.Item>
-            <ListGroup.Item action onClick={() => setArea("Trên 100 m2")}>
-              Trên 100 m2
+            <ListGroup.Item action onClick={() => setArea("Trên 40 m2")}>
+              Trên 40 m2
             </ListGroup.Item>
           </ListGroup>
         </Card>

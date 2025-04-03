@@ -10,7 +10,10 @@ import "./Searchbar.scss";
 import { Dropdown, Stack, Button, Form, Modal } from "react-bootstrap";
 import "../Modal/LoginModal";
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  useHistory,
+  useLocation,
+} from "react-router-dom/cjs/react-router-dom.min";
 import { fetchDistricts } from "../../services/PostService";
 
 const SearchBar = () => {
@@ -25,7 +28,8 @@ const SearchBar = () => {
 
   const [showModal, setShowModal] = useState(false);
 
-  const location = useHistory();
+  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,11 +47,21 @@ const SearchBar = () => {
   }, [city]);
 
   const handleSearch = () => {
-    const query = { searchText, city, district, price, area, time, rating };
-    // console.log(">>> check query: ", query);
+    const params = new URLSearchParams(location.search);
+    const _houseids = params.get("houseids");
+    const houseids = _houseids ? _houseids.split(",").map(Number) : [];
+    const query = {
+      searchText,
+      city,
+      district,
+      price,
+      area,
+      time,
+      rating,
+      houseids,
+    };
     const queryParams = new URLSearchParams(query).toString();
-    // console.log(">>> check query in search bar: ", queryParams);
-    location.push(`/search?${queryParams}`);
+    history.push(`/search?${queryParams}`);
   };
 
   const handleCloseModal = () => {
@@ -64,7 +78,7 @@ const SearchBar = () => {
     setRating("");
 
     handleSearch();
-    location.push("");
+    history.push("");
   };
 
   return (
@@ -174,20 +188,17 @@ const SearchBar = () => {
                   <Dropdown.Item onClick={() => setPrice("Dưới 1 triệu")}>
                     Dưới 1 triệu
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setPrice("1 - 3 triệu")}>
-                    1 - 3 triệu
+                  <Dropdown.Item onClick={() => setPrice("1 - 2 triệu")}>
+                    1 - 2 triệu
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setPrice("2 - 3 triệu")}>
+                    2 - 3 triệu
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => setPrice("3 - 5 triệu")}>
                     3 - 5 triệu
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setPrice("5 - 8 triệu")}>
-                    5 - 8 triệu
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setPrice("8 - 10 triệu")}>
-                    8 - 10 triệu
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setPrice("Trên 10 triệu")}>
-                    Trên 10 triệu
+                  <Dropdown.Item onClick={() => setPrice("Trên 5 triệu")}>
+                    Trên 5 triệu
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -201,20 +212,17 @@ const SearchBar = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => setArea("Dưới 30m2")}>
-                    Dưới 30m2
+                  <Dropdown.Item onClick={() => setArea("Dưới 20m2")}>
+                    Dưới 20m2
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setArea("30 - 50m2")}>
-                    30 - 50m2
+                  <Dropdown.Item onClick={() => setArea("20 - 30m2")}>
+                    20 - 30m2
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setArea("50 - 80m2")}>
-                    50 - 80m2
+                  <Dropdown.Item onClick={() => setArea("30 - 40m2")}>
+                    30 - 40m2
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setArea("80 - 100m2")}>
-                    80 - 100m2
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setArea("Trên 100 m2")}>
-                    Trên 100 m2
+                  <Dropdown.Item onClick={() => setArea("Trên 40 m2")}>
+                    Trên 40 m2
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

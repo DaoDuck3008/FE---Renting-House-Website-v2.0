@@ -41,11 +41,8 @@ const UserInfoModal = (props) => {
   const handleGetUserInfo = async () => {
     let response = await fetchUserInfo();
     if (response && response.data && +response.data.EC === 0) {
-      // console.log(">>> check decoded: ", response.data.DT);
       setUserInfo(response.data.DT.payload);
-      // console.log("check userId: ", response.data.DT.payload.id);
       userId = response.data.DT.payload.id;
-      // console.log(">>> check userId: ", userId);
     }
   };
 

@@ -61,7 +61,6 @@ const LoginModal = (props) => {
 
   const handleLoginUser = async () => {
     if (checkValidInput()) {
-      // console.log(">>> userData: ", userData);
       let response = await loginUser(userData.emailPhone, userData.password);
       if (response && response.data && +response.data.EC === 0) {
         Cookies.set("isLogin", "true", {

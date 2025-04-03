@@ -29,6 +29,8 @@ import { fetchUserInfo } from "../../services/UserService";
 import PostPreview from "./PostPreview";
 
 const UploadPost = (props) => {
+  const history = useHistory();
+
   const [numberBathroom, setNumberBathroom] = useState(1);
   const [numberFloor, setNumberFloor] = useState(1);
   const [numberBedroom, setNumberBedroom] = useState(1);
@@ -39,8 +41,6 @@ const UploadPost = (props) => {
   const [cameraChecked, setCameraChecked] = useState(false);
 
   const [filesFromDropzone, setFilesFromDropzone] = useState([]);
-
-  const history = useHistory();
 
   const defaultInput = {
     // section 1
@@ -89,21 +89,21 @@ const UploadPost = (props) => {
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
+    const getUserInfo = async () => {
+      let response = await fetchUserInfo();
+      if (response && response.data && +response.data.EC === 0) {
+        const userInfo = response.data.DT.payload;
+        //cập nhật host_name, email và phone luôn
+        let _postData = _.cloneDeep(postData);
+        _postData["host_name"] = userInfo.username;
+        _postData["email"] = userInfo.email;
+        _postData["phone"] = userInfo.phone;
+        setPostData(_postData);
+      }
+    };
+
     getUserInfo();
   }, []);
-
-  const getUserInfo = async () => {
-    let response = await fetchUserInfo();
-    if (response && response.data && +response.data.EC === 0) {
-      const userInfo = response.data.DT.payload;
-      //cập nhật host_name, email và phone luôn
-      let _postData = _.cloneDeep(postData);
-      _postData["host_name"] = userInfo.username;
-      _postData["email"] = userInfo.email;
-      _postData["phone"] = userInfo.phone;
-      setPostData(_postData);
-    }
-  };
 
   // Hàm tăng giảm khi bấm nút + - ở section 3
   const increaseNumber = (setter, value) => {
@@ -139,7 +139,6 @@ const UploadPost = (props) => {
   // hàm kiểm tra xem các ô input đã được điền vào trước khi submit chưa.
   const checkValidation = () => {
     setCheckValidInput(defaultValidInput);
-
     let check = true;
     let arr = [
       "address",
@@ -174,7 +173,6 @@ const UploadPost = (props) => {
       check = false;
       toast.error(`You must add at least a picture!`);
     }
-
     return check;
   };
 
@@ -185,18 +183,12 @@ const UploadPost = (props) => {
     postData.utilities["numberBedroom"] = numberBedroom;
     postData.utilities["numberFloor"] = numberFloor;
 
-    // console.log(">>> file from Dropzone: ", filesFromDropzone);
-
     if (filesFromDropzone?.length) {
       postData.images = filesFromDropzone;
     }
 
-    // console.log(">>> check post data: ", postData);
-
     if (checkValidation()) {
-      // console.log(">>> validate!!!");
       let response = await uploadAPost(postData);
-      // console.log(">>> check response: ", response);
       if (response && response.data && +response.data.EC === 0) {
         toast.success(`${response.data.EM}`);
         history.push("/search");
@@ -211,12 +203,9 @@ const UploadPost = (props) => {
     postData.utilities["numberBedroom"] = numberBedroom;
     postData.utilities["numberFloor"] = numberFloor;
 
-    // console.log(">>> file from Dropzone: ", filesFromDropzone);
-
     if (filesFromDropzone?.length) {
       postData.images = filesFromDropzone;
     }
-    // console.log(">>> check postData: ", postData);
     setShowPreview(true);
   };
 

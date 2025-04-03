@@ -59,6 +59,7 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
     }
   };
 
+  // lấy thông tin tài khoản đang sử dụng
   const fetchData = async () => {
     try {
       const userInfo = await fetchUserInfo();
@@ -103,6 +104,9 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
           rater_name: username,
           rating: newComment.rating,
           description: newComment.description,
+        },
+        {
+          withCredentials: true,
         }
       );
 
@@ -145,6 +149,16 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
 
   // Hàm biến đổi rating từ số thành biểu tượng ngôi sao
   const ratingStars = (ratingNum) => {
+    if (!ratingNum) {
+      return (
+        <>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FontAwesomeIcon key={index} icon={faStar} />
+          ))}
+        </>
+      );
+    }
+
     const ratingINT = Math.floor(ratingNum); // Phần nguyên của rating
     const halfRating = ratingNum % 1; // Phần thập phân của rating
     let fullStars = ratingINT;
@@ -193,15 +207,15 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
         <div>
           {house ? (
             <div className="house-detail-wrapper d-flex flex-column">
-              {/* 🏠 1️⃣ Phần thông tin nhà */}
+              {/* Phần thông tin nhà */}
               <Row className="house-info-container d-flex ">
                 {/* Hình ảnh nhà */}
                 <Col
                   xl={6}
-                  className="house-image-container d-flex flex-column align-items-center justify-content-center p-2 overflow-hidden"
+                  className="house-image-container d-flex flex-column align-items-center justify-content-center p-2"
                 >
                   {/* Ảnh lớn đang được chọn */}
-                  <div className="house-image mx-auto">
+                  <div className="house-image ">
                     <img
                       className="main-image"
                       src={selectedImage || house?.image}
@@ -275,9 +289,20 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
                         Liên hệ ngay
                       </Button>
                     </div>
-                    <p className="contact-text mt-2">
-                      Liên hệ để biết thêm thông tin
-                    </p>
+                    <div>
+                      <p className="contact-text mt-2">
+                        Chủ nhà:{" "}
+                        {house.Host?.host_name
+                          ? house.Host.host_name
+                          : "Không nhận diện"}
+                      </p>
+                      <p className="contact-text">
+                        Liên hệ ngay:{" "}
+                        {house.Host?.phone
+                          ? house.Host.phone
+                          : "Không có số điện thoại."}
+                      </p>
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -294,7 +319,10 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
                   <h3 style={{ fontSize: "24px", fontWeight: "bold" }}>
                     Bình luận tiêu biểu
                   </h3>
-                  <div className="comments-list pr-2">
+                  <div
+                    className="comments-list pr-2"
+                    style={{ maxHeight: "800px" }}
+                  >
                     {house.comments.length > 0 ? (
                       house.comments.map((comment) => (
                         <div
@@ -397,7 +425,7 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
                         </p>
                         <p>
                           <FontAwesomeIcon icon={faBuilding} size="xl" /> Số
-                          tầng: {house.Utilities ? house.Utilities.floor : 1}
+                          tầng: {house.Utilities ? house.Utilities.floors : 1}
                         </p>{" "}
                         <p>
                           <FontAwesomeIcon icon={faBath} size="xl" /> Phòng tắm:{" "}
@@ -450,7 +478,7 @@ const HouseDetailModal = ({ houseId, isOpen, onClose }) => {
                   <hr className="bordered "></hr>
                   <div className="house-description-container">
                     <h3 className="description-title mb-2">Miêu Tả</h3>
-                    <p>
+                    <p style={{ whiteSpace: "pre-line" }}>
                       <FontAwesomeIcon icon={faCheckCircle} />{" "}
                       {house.description || "Không có thông tin"}
                     </p>

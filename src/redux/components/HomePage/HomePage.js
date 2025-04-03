@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import PostList from "../PostList/PostList";
 import Sidebar from "../Searchbar/SideBar";
-import MapboxExample from "../MapboxExample/MapboxExample";
+import Mapbox from "../Mapbox/Mapbox";
 
 const HomePage = (props) => {
   const [displayMap, setDisplayMap] = useState(true);
@@ -78,7 +78,7 @@ const HomePage = (props) => {
 
           {/* RIGHT SIDE */}
           <Col className={displayMap ? "col-7 " : "d-none"}>
-            <MapboxExample />
+            <Mapbox />
           </Col>
         </Row>
       </span>

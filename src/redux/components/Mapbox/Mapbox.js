@@ -23,6 +23,8 @@ import {
 import * as turf from "@turf/turf";
 import { toast } from "react-toastify";
 import { toInteger } from "lodash";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 
 const MapComponent = () => {
   const mapRef = useRef(null); // Lấy reference của Map
@@ -35,12 +37,13 @@ const MapComponent = () => {
   const [showGeolocate, setShowGeolocate] = useState(true); // kiểm soát hiển thị của Geolocate
 
   const [circleData, setCircleData] = useState(null);
-  const [radius, setRadius] = useState(500); // Mặc định bán kính là 500m
-  const [showCircle, setShowCircle] = useState(false);
-  const [filterCoordinates, setFilterCoordinates] = useState([]);
+  const [radius, setRadius] = useState(100); // bán kính mặc định là 500m
+  const [stepRadius, setStepRadius] = useState(100);
+  const [showCircle, setShowCircle] = useState(false); //hiển thị bán kính tìm kiếm
+  const [filterCoordinates, setFilterCoordinates] = useState([]); // Danh sách nhà trọ nằm trong bán kính đã chọn
 
-  const [route, setRoute] = useState(null);
-  const [routeInfo, setRouteInfo] = useState({});
+  const [route, setRoute] = useState(null); // vẽ đường đi từ định vị tới nhà trọ
+  const [routeInfo, setRouteInfo] = useState({}); // thông tin về đường đi
 
   const location = useLocation();
   const history = useHistory();
@@ -271,10 +274,10 @@ const MapComponent = () => {
         <Map
           ref={mapRef} // Gán ref cho map
           initialViewState={{
-            longitude: 105.854444, // Hà Nội
+            longitude: 105.854444,
             latitude: 21.028511,
             zoom: 11,
-          }}
+          }} // tọa độ của trung tâm thành phố Hà Nội
           mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
           mapStyle="mapbox://styles/mapbox/streets-v11"
           style={{ width: "100%", height: "100%" }}
@@ -316,7 +319,13 @@ const MapComponent = () => {
                   clickOnHouse(house);
                 }}
               >
-                <img src={houseGreenBG} width={50} height={50} alt="House" />
+                <img
+                  src={houseGreenBG}
+                  width={50}
+                  height={50}
+                  alt="House"
+                  style={{ zIndex: "1000" }}
+                />
               </Marker>
             ))}
 
@@ -451,13 +460,13 @@ const MapComponent = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  500m
+                  0km
                 </p>
                 <Form.Range
                   className="mx-2"
-                  min="500"
-                  max="10000"
-                  step="500"
+                  min="0"
+                  max={10000}
+                  step={stepRadius}
                   value={radius}
                   onChange={(e) => {
                     const newRadius = Number(e.target.value);
@@ -502,6 +511,31 @@ const MapComponent = () => {
                   </p>
                 </div>
               )}
+              {/* hiển thị nút bay đến FBU */}
+              <div className="">
+                <Button
+                  variant="success "
+                  className="mt-1 mx-auto"
+                  onClick={() => {
+                    if (mapRef.current) {
+                      mapRef.current.flyTo({
+                        center: [105.7870358500516, 21.032038551131727],
+                        zoom: 15,
+                        speed: 1.5,
+                        curve: 1.5,
+                        essential: true,
+                      });
+                    }
+                    //nếu đang trỏ vào 1 bài đăng trên bản đồ thì xóa đi
+                    setSelectedHouse(null);
+                    const longitude = 105.7870358500516;
+                    const latitude = 21.032038551131727;
+                    setMarkerPosition({ longitude, latitude });
+                  }}
+                >
+                  <FontAwesomeIcon icon={faGraduationCap} /> Đặt định vị tại FBU
+                </Button>
+              </div>
             </div>
           )}
 

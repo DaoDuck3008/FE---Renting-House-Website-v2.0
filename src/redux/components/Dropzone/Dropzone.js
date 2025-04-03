@@ -12,7 +12,7 @@ const Dropzone = ({ onFilesUploaded }) => {
   const [uploadNotice, setUploadNotice] = useState("");
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
-    // Do something with the files
+    // những ảnh đạt tiêu chí sẽ đi vào bước tiếp theo
     if (acceptedFiles?.length) {
       setFiles((previousFiles) => [
         ...previousFiles,
@@ -22,15 +22,16 @@ const Dropzone = ({ onFilesUploaded }) => {
       ]);
     }
 
+    // những ảnh không đạt chỉ tiêu được lưu tạm thời vào 1 array
     if (rejectedFiles?.length) {
       setRejected((previousFiles) => [...previousFiles, ...rejectedFiles]);
     }
-    // console.log(">>> Images are lager than 5MB: ", rejected);
   }, []);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [] },
-    maxSize: 1024 * 3000, // Ảnh có size tối đa là 5MB
+    maxSize: 1024 * 3000, // Ảnh có size tối đa là 3MB
   });
 
   const removeImg = (index) => {
@@ -78,13 +79,10 @@ const Dropzone = ({ onFilesUploaded }) => {
         })
       );
 
-      // console.log("All upload results:", uploadResults);
       const cloudImgs = [];
       uploadResults.map((img) => {
         cloudImgs.push(img.url);
       });
-
-      // console.log(">>> check cloud imgs: ", cloudImgs);
 
       onFilesUploaded(cloudImgs);
 

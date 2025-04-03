@@ -27,6 +27,7 @@ const PostList = (props) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [totalRows, setTotalRows] = useState(0);
   const currentLimit = 4;
 
   const handleFlyToHouse = (houseId) => {
@@ -51,6 +52,7 @@ const PostList = (props) => {
     if (response && response.data && +response.data.EC === 0) {
       setTotalPages(response.data.DT.totalPages);
       setPosts(response.data.DT.posts);
+      setTotalRows(response.data.DT.totalRows);
     }
   };
 
@@ -70,6 +72,15 @@ const PostList = (props) => {
 
   // Hàm biến đổi rating từ số thành biểu tượng ngôi sao
   const ratingStars = (ratingNum) => {
+    if (!ratingNum) {
+      return (
+        <>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FontAwesomeIcon key={index} icon={faStar} />
+          ))}
+        </>
+      );
+    }
     const ratingINT = Math.floor(ratingNum); // Phần nguyên của rating
     const halfRating = ratingNum % 1; // Phần thập phân của rating
     let fullStars = ratingINT;
@@ -106,6 +117,7 @@ const PostList = (props) => {
 
   return (
     <>
+      <p>Kết quả tìm kiếm: {totalRows} bài viết.</p>
       {posts?.length > 0 ? (
         <>
           <div className="container postList-container d-flex flex-column">
